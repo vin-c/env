@@ -20,7 +20,6 @@ alias dfh='df -h'
 alias cp='cp -i'
 alias mv='mv -i'
 alias rm=' rm -i'
-mf() { tbl $* | nroff -mandoc | $PAGER -s }
 alias c=clear
 alias psx='ps aux | $PAGER'
 alias ls='ls $LS_OPTIONS -F'
@@ -58,7 +57,6 @@ zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin \
 			     /usr/sbin /usr/bin /sbin /bin /usr/X11R6/bin
 
 autoload run-help
-. /etc/zsh/zshcomp
 
 setopt autocd
 setopt correct
@@ -90,7 +88,6 @@ ax () {
 	[ "$DIR" != "" -a -d "$DIR" ] && cd "$DIR"
 	rm -rf $TMP
 }
-
 prompt(){
 	autoload colors
 	colors
@@ -99,9 +96,8 @@ prompt(){
 
 }
 prompt
-
 search_history() { fc -l -20000 | grep --color=always "$@" }
-
+mf() { tbl $* | nroff -mandoc | $PAGER -s }
 # options de 'less'
 LESS="-eMr"
 LESSCHARSET=latin1
