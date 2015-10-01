@@ -10,8 +10,6 @@ if [[ -f /etc/profile.d/grid-env.sh ]]; then
 	alias gjs='glite-wms-job-status'
 fi
 
-source /home/vinc/.novacreds/iphc.sh
-
 # SCM @ IN2P3
 export SVN_SSH=ssh
 
