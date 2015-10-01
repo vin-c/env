@@ -10,6 +10,8 @@ if [[ -f /etc/profile.d/grid-env.sh ]]; then
 	alias gjs='glite-wms-job-status'
 fi
 
+source /home/vinc/.novacreds/iphc.sh
+
 # SCM @ IN2P3
 export SVN_SSH=ssh
 
@@ -71,6 +73,7 @@ setopt promptsubst
 setopt HIST_IGNORE_DUPS
 setopt histignorealldups
 setopt HIST_IGNORE_SPACE
+setopt share_history
 
 MAIL=/var/spool/mail/$USERNAME
 
@@ -112,3 +115,13 @@ export LS_COLORS="no=00:fi=00:di=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd
 # Init Autojump, if installed
 [ -r "/usr/share/autojump/autojump.zsh" ] && source /usr/share/autojump/autojump.zsh
 
+# Bind keys for history
+bindkey '^[Oa'    history-beginning-search-backward
+bindkey '^[[1;5A' history-beginning-search-backward
+bindkey '^[[A'    history-beginning-search-backward
+bindkey '^[OA'    history-beginning-search-backward
+
+bindkey '^[Ob'    history-beginning-search-forward
+bindkey '^[[1;5B' history-beginning-search-forward
+bindkey '^[[B'    history-beginning-search-forward
+bindkey '^[OB'    history-beginning-search-forward
