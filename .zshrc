@@ -123,3 +123,7 @@ bindkey '^[Ob'    history-beginning-search-forward
 bindkey '^[[1;5B' history-beginning-search-forward
 bindkey '^[[B'    history-beginning-search-forward
 bindkey '^[OB'    history-beginning-search-forward
+
+bindkey "^A" beginning-of-line
+bindkey "^E" end-of-line
+
