@@ -127,3 +127,9 @@ bindkey '^[OB'    history-beginning-search-forward
 bindkey "^A" beginning-of-line
 bindkey "^E" end-of-line
 
+# Set terminal title to hostname
+case $TERM in
+    xterm*)
+        precmd () {print -Pn "\e]0;%m\a"}
+        ;;
+esac
