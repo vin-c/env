@@ -1,0 +1,9 @@
+<background>
+  <static>
+    <duration>8640000.0</duration>
+    <file>
+      <size width="1920" height="1080">/usr/share/backgrounds/gnome/Dark_Ivy.jpg</size>
+      <size width="1680" height="1050">/usr/share/backgrounds/gnome/Dark_Ivy.jpg</size>
+    </file>
+  </static>
+</background>
