@@ -27,8 +27,7 @@ sysctl -p
 #cinder storage node
 
 #add filter to /etc/lvm/lvm.conf
-sed -i "s/^    filter/#IH4V##\n    # filter/g" /etc/lvm/lvm.conf
-sed -i 's;#IH4V##;    # Filter for current device and cinder volume\n    filter = [ "a/sdb/", "a/sda/", "r/.*/"];g' /etc/lvm/lvm.conf
+sed -i 's;^    # By default we accept every block device:;    # Filter for current device and cinder volume\n    filter = [ "a/sdb/", "a/sda/", "r/.*/"]\n\n    # By default we accept every block device:;g' /etc/lvm/lvm.conf
 
 pvcreate /dev/sdb
 vgcreate cinder-volumes /dev/sdb
