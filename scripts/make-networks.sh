@@ -22,3 +22,15 @@ neutron router-create admin-router
 neutron router-interface-add admin-router admin-subnet
 
 neutron router-gateway-set admin-router ext-net
+
+# for the demo tenant
+neutron net-create demo-net
+
+neutron subnet-create demo-net --name demo-subnet \
+--gateway 192.168.1.1 192.168.1.0/24
+
+neutron router-create demo-router
+
+neutron router-interface-add demo-router demo-subnet
+
+neutron router-gateway-set demo-router ext-net
