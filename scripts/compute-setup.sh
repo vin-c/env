@@ -125,29 +125,6 @@ systemctl start openstack-nova-compute.service
 systemctl enable neutron-openvswitch-agent.service
 systemctl start neutron-openvswitch-agent.service
 
-#cinder storage node
-pvcreate /dev/sdb
-vgcreate cinder-volumes /dev/sdb
-
-yum -y install openstack-cinder targetcli python-oslo-db MySQL-python
-
-sed -i.bak "/\[database\]/a connection = mysql://cinder:$SERVICE_PWD@$CONTROLLER_IP/cinder" /etc/cinder/cinder.conf
-sed -i '0,/\[DEFAULT\]/s//\[DEFAULT\]\
-rpc_backend = rabbit\
-rabbit_host = '"$CONTROLLER_IP"'\
-auth_strategy = keystone\
-my_ip = '"$THISHOST_IP"'\
-iscsi_helper = lioadm/' /etc/cinder/cinder.conf
-sed -i "/\[keystone_authtoken\]/a \
-auth_uri = http://$CONTROLLER_IP:5000/v2.0\n\
-identity_uri = http://$CONTROLLER_IP:35357\n\
-admin_tenant_name = service\n\
-admin_user = cinder\n\
-admin_password = $SERVICE_PWD" /etc/cinder/cinder.conf
-
-systemctl enable openstack-cinder-volume.service target.service
-systemctl start openstack-cinder-volume.service target.service
-
 echo 'export OS_TENANT_NAME=admin' > creds
 echo 'export OS_USERNAME=admin' >> creds
 echo 'export OS_PASSWORD='"$ADMIN_PWD" >> creds
