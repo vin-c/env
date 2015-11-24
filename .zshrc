@@ -10,6 +10,11 @@ if [[ -f /etc/profile.d/grid-env.sh ]]; then
 	alias gjs='glite-wms-job-status'
 fi
 
+# Load openstask testing creds
+if [[ -f ~/scripts/creds ]]; then
+        source ~/scripts/creds
+fi
+
 # SCM @ IN2P3
 export SVN_SSH=ssh
 
