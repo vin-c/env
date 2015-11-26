@@ -1,5 +1,5 @@
 #!/bin/bash
-source creds
+source admin-creds
 
 # Create ext-net (public)
 neutron net-create ext-net --shared --router:external True \
@@ -14,7 +14,7 @@ neutron subnet-create ext-net --name ext-subnet \
 neutron net-create admin-net
 
 neutron subnet-create admin-net --name admin-subnet \
---dns-nameserver 10.0.0.2 \
+--dns-nameserver 172.16.117.2 \
 --gateway 10.0.2.2 10.0.2.0/24
 
 neutron router-create admin-router
@@ -24,9 +24,11 @@ neutron router-interface-add admin-router admin-subnet
 neutron router-gateway-set admin-router ext-net
 
 # for the demo tenant
+source demo-creds
 neutron net-create demo-net
 
 neutron subnet-create demo-net --name demo-subnet \
+--dns-nameserver 172.16.117.2 \
 --gateway 192.168.1.1 192.168.1.0/24
 
 neutron router-create demo-router
