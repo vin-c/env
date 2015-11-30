@@ -152,7 +152,7 @@ bindkey "^E" end-of-line
 
 # Set terminal title to hostname
 case $TERM in
-    xterm*)
+    xterm*|screen*)
         precmd () {print -Pn "\e]0;%m\a"}
         ;;
 esac
