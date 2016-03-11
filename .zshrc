@@ -10,6 +10,11 @@ if [[ -f /etc/profile.d/grid-env.sh ]]; then
 	alias gjs='glite-wms-job-status'
 fi
 
+export X509_CERT_DIR=/etc/grid-security/certificates
+export X509_USER_CERT=~/.globus/usercert.pem
+export X509_USER_KEY=~/.globus/userkey.pem
+export X509_USER_PROXY=/tmp/x509up_u500
+
 # Load openstask testing creds
 if [[ -f ~/scripts/creds ]]; then
         source ~/scripts/creds
