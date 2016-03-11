@@ -37,6 +37,9 @@ alias lart='ls -lart'
 alias ll='ls $LS_OPTIONS -laFh'
 alias setcl='export CLASSPATH=.:$CLASSPATH'
 alias setdp='export DISPLAY=":0"'
+alias rgrep='grep -R'
+alias vi='vim'
+alias nocom="egrep -v '^#|^$'"
 
 # debian
 alias acs='apt-cache search'
