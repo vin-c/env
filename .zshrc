@@ -45,6 +45,7 @@ alias setdp='export DISPLAY=":0"'
 alias rgrep='grep -R'
 alias vi='vim'
 alias nocom="egrep -v '^#|^$'"
+alias gowork="cd ~/Documents/openstack && source admin-creds"
 
 # debian
 alias acs='apt-cache search'
