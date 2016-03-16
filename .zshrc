@@ -23,6 +23,11 @@ fi
 # SCM @ IN2P3
 export SVN_SSH=ssh
 
+# Lauch screen
+if [[ `hostname` == "vinc" ]]; then
+	screen -r irc
+fi
+
 # Aliases
 alias h=' search_history'
 alias bat='upower -i /org/freedesktop/UPower/devices/battery_BAT0'
