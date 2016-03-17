@@ -82,6 +82,3 @@ export LANG=fr_FR.UTF-8
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-
-# old zsh configuration
-source ~/.zshrc.pre-oh-my-zsh

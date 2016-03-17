@@ -1,5 +1,7 @@
 # Created by vinc
 
+# Oh-my-zsh
+source ~/.zshrc.oh-my-zsh
 READNULLCMD=${PAGER:-/usr/bin/pager}
 
 # Load Grid environment
