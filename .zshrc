@@ -39,13 +39,14 @@ alias c=clear
 alias psx='ps aux | $PAGER'
 alias ls='ls $LS_OPTIONS -F'
 alias lart='ls -lart'
-alias ll='ls $LS_OPTIONS -laFh'
+#alias ll='ls $LS_OPTIONS -laFh'
 alias setcl='export CLASSPATH=.:$CLASSPATH'
 alias setdp='export DISPLAY=":0"'
 alias rgrep='grep -R'
 alias vi='vim'
 alias nocom="egrep -v '^#|^$'"
 alias gowork="cd ~/Documents/openstack && source admin-creds"
+alias os="openstack"
 
 # debian
 alias acs='apt-cache search'
@@ -66,6 +67,7 @@ alias yu='sudo yum update'
 alias yi='sudo yum install'
 alias ys='yum search'
 alias yv='yum info'
+alias sr="systemctl restart"
 
 # Global ZSH
 [ -x "/usr/bin/most" ] && export PAGER=most
@@ -133,7 +135,7 @@ prompt(){
 	export PS1="%T $color_isok%n:%l %S%m%s%f:%3~%{$reset%}% %F{cyan}\${vcs_info_msg_0_}%f# "
 
 }
-prompt
+#prompt
 search_history() { fc -l -20000 | grep --color=always "$@" }
 mf() { tbl $* | nroff -mandoc | $PAGER -s }
 # options de 'less'
