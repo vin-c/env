@@ -5,3 +5,4 @@ export OS_TENANT_NAME=demo
 export OS_USERNAME=demo
 export OS_PASSWORD=m1sfcr
 export OS_AUTH_URL=http://10.0.0.11:5000/v3
+export OS_IMAGE_API_VERSION=2
