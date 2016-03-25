@@ -130,20 +130,11 @@ ax () {
 	[ "$DIR" != "" -a -d "$DIR" ] && cd "$DIR"
 	rm -rf $TMP
 }
-#prompt(){
-#	autoload colors
-#	colors
-#	color_isok="%(?.%F{green}.%F{red})"
-#	export PS1="%T $color_isok%n:%l %S%m%s%f:%3~%{$reset%}% %F{cyan}\${vcs_info_msg_0_}%f# "
-#
-#}
-#prompt
 
+# prompt
 if [ $UID -eq 0 ]; then NCOLOR="red"; else NCOLOR="white"; fi
 RCOLOR="%(?.$fg[black]$bg[green].$fg[grey]$bg[red])"
-
-PROMPT='%{$fg[$NCOLOR]%}%B%n%b%{$reset_color%}:%{$fg[blue]%}%B%c/%b%{$reset_color%} $(git_prompt_info)$RCOLOR%(!.#.$)$reset_color '
-RPROMPT='[%*]'
+PROMPT='%{$fg[$NCOLOR]%}%B%n%b%{$reset_color%}:%{$fg[blue]%}%B%c/%b%{$reset_color%} $(git_prompt_info)%{$RCOLOR%}%(!.#.$)%{$reset_color%} '
 
 search_history() { fc -l -20000 | grep --color=always "$@" }
 mf() { tbl $* | nroff -mandoc | $PAGER -s }
