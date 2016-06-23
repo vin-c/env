@@ -1,10 +1,10 @@
 [user]
-        name = Vincent Gatignol-Jamon
-        email = vincent.gatignol-jamon@idgrilles.fr
+    name = Vincent Gatignol-Jamon
+    email = vincent.gatignol-jamon@idgrilles.fr
 [help]
-        autocorrect = 1
+    autocorrect = 1
 [core]
-        autocrlf = input
+    autocrlf = input
 	excludesfile = /home/vinc/.gitignore-global
 [alias]
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
@@ -12,3 +12,8 @@
 	default = simple
 [color]
 	ui = true
+[oh-my-zsh]
+    hide-dirty = 1
+    hide-status = 0
+[diff]
+	ignoreSubmodules = all
