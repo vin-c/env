@@ -77,7 +77,7 @@ systemctl enable memcached.service
 systemctl start memcached.service
 
 #edit /etc/keystone.conf
-sed -i.liberty_orig "s/#admin_token=ADMIN/admin_token=$ADMIN_TOKEN/g" /etc/keystone/keystone.conf
+sed -i.liberty_orig "s/#admin_token = ADMIN/admin_token = $ADMIN_TOKEN/g" /etc/keystone/keystone.conf
 sed -i "/\[database\]/a \
 connection = mysql://keystone:$SERVICE_PWD@$CONTROLLER_IP/keystone\n" /etc/keystone/keystone.conf
 sed -i "/\[memcache\]/a \
