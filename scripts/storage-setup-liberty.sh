@@ -2,57 +2,68 @@
 
 source config
 
-#install ntp
-yum -y install ntp
-systemctl enable ntpd.service
-systemctl start ntpd.service
+#install ntp/chrony
+yum -y install chrony
+systemctl enable chronyd.service
+sed -i 's/^server/#server/g' /etc/chrony.conf
+sed -i 's/^#server\ 0/server\ controller\ iburst\n#server\ 0/g' /etc/chrony.conf
+systemctl start chronyd.service
 
 #openstack repos
-yum -y install yum-plugin-priorities
-yum -y install epel-release
-yum -y install http://rdo.fedorapeople.org/openstack-juno/rdo-release-juno.rpm
+yum -y install centos-release-openstack-liberty
 yum -y upgrade
-#yum -y install openstack-selinux
 
-#loosen things up
-systemctl stop firewalld.service
-systemctl disable firewalld.service
-sed -i 's/enforcing/disabled/g' /etc/selinux/config
-echo 0 > /sys/fs/selinux/enforce
-
-echo 'net.ipv4.conf.all.rp_filter=0' >> /etc/sysctl.conf
-echo 'net.ipv4.conf.default.rp_filter=0' >> /etc/sysctl.conf
-sysctl -p
-
-#cinder storage node
+## CINDER block storage service
+yum -y install lvm2
+systemctl enable lvm2-lvmetad.service
+systemctl start lvm2-lvmetad.service
 
 #add filter to /etc/lvm/lvm.conf
-sed -i 's;^    # By default we accept every block device:;    # Filter for current device and cinder volume\n    filter = [ "a/sdb/", "a/sda/", "r/.*/"]\n\n    # By default we accept every block device:;g' /etc/lvm/lvm.conf
+sed -i 's;^    # By default we accept every block device:;    # Filter for current device and cinder volume\n    filter = [ "a/sdb/", "r/.*/"]\n\n    # By default we accept every block device:;g' /etc/lvm/lvm.conf
 
+#create pv/vg
 pvcreate /dev/sdb
 vgcreate cinder-volumes /dev/sdb
 
-yum -y install openstack-cinder targetcli python-oslo-db MySQL-python
+#install packages
+yum -y install openstack-cinder targetcli python-oslo-policy
 
-sed -i.bak "/\[database\]/a connection = mysql://cinder:$SERVICE_PWD@$CONTROLLER_IP/cinder" /etc/cinder/cinder.conf
-sed -i '0,/\[DEFAULT\]/s//\[DEFAULT\]\
-rpc_backend = rabbit\
-rabbit_host = '"$CONTROLLER_IP"'\
-auth_strategy = keystone\
-my_ip = '"$THISHOST_IP"'\
-iscsi_helper = lioadm/' /etc/cinder/cinder.conf
+#edit /etc/cinder/cinder.conf
+sed -i.liberty_orig "/\[database\]/a \
+connection = mysql://cinder:$SERVICE_PWD@$CONTROLLER_IP/cinder" /etc/cinder/cinder.conf
+
+sed -i "/\[DEFAULT\]/a \
+rpc_backend = rabbit\n\
+auth_strategy = keystone\n\
+enabled_backends = lvm\n\
+glance_host = $CONTROLLER_IP\n\
+my_ip = $THISHOST_IP\n"  /etc/cinder/cinder.conf
+
+sed -i "/\[oslo_messaging_rabbit\]/a \
+rabbit_host = $CONTROLLER_IP\n\
+rabbit_userid = openstack\n\
+rabbit_password = $SERVICE_PWD\n" /etc/cinder/cinder.conf
+
 sed -i "/\[keystone_authtoken\]/a \
-auth_uri = http://$CONTROLLER_IP:5000/v2.0\n\
-identity_uri = http://$CONTROLLER_IP:35357\n\
-admin_tenant_name = service\n\
-admin_user = cinder\n\
-admin_password = $SERVICE_PWD" /etc/cinder/cinder.conf
+auth_uri = http://$CONTROLLER_IP:5000\n\
+auth_url = http://$CONTROLLER_IP:35357\n\
+auth_plugin = password\n\
+project_domain_id = default\n\
+user_domain_id = default\n\
+project_name = service\n\
+username = cinder\n\
+password = $SERVICE_PWD\n" /etc/cinder/cinder.conf
+
+sed -i "/\[lvm\]/a \
+volume_driver = cinder.volume.drivers.lvm.LVMVolumeDriver\n\
+volume_group = cinder-volumes\n\
+iscsi_protocol = iscsi\n\
+iscsi_helper = lioadm\n" /etc/cinder/cinder.conf
+
+sed -i "/\[oslo_concurrency\]/a \
+lock_path = /var/lib/cinder/tmp\n" /etc/cinder/cinder.conf
 
 systemctl enable openstack-cinder-volume.service target.service
 systemctl start openstack-cinder-volume.service target.service
 
-echo 'export OS_TENANT_NAME=admin' > creds
-echo 'export OS_USERNAME=admin' >> creds
-echo 'export OS_PASSWORD='"$ADMIN_PWD" >> creds
-echo 'export OS_AUTH_URL=http://'"$CONTROLLER_IP"':35357/v2.0' >> creds
-source creds
+#EOF

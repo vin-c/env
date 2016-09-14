@@ -2,131 +2,135 @@
 
 source config
 
-#install ntp
-yum -y install ntp
-systemctl enable ntpd.service
-systemctl start ntpd.service
+#install ntp/chrony
+yum -y install chrony
+systemctl enable chronyd.service
+sed -i 's/^server/#server/g' /etc/chrony.conf
+sed -i 's/^#server\ 0/server\ controller\ iburst\n#server\ 0/g' /etc/chrony.conf
+systemctl start chronyd.service
 
 #openstack repos
-yum -y install yum-plugin-priorities
-yum -y install epel-release
-yum -y install http://rdo.fedorapeople.org/openstack-juno/rdo-release-juno.rpm
+yum -y install centos-release-openstack-liberty
 yum -y upgrade
-#yum -y install openstack-selinux
 
-#loosen things up
-systemctl stop firewalld.service
-systemctl disable firewalld.service
-sed -i 's/enforcing/disabled/g' /etc/selinux/config
-echo 0 > /sys/fs/selinux/enforce
+## NOVA
+yum -y install openstack-nova-compute sysfsutils 
 
-echo 'net.ipv4.conf.all.rp_filter=0' >> /etc/sysctl.conf
-echo 'net.ipv4.conf.default.rp_filter=0' >> /etc/sysctl.conf
-sysctl -p
-
-#get primary NIC info
-for i in $(ls /sys/class/net); do
-    if [ "$(cat /sys/class/net/$i/ifindex)" == '3' ]; then
-        NIC=$i
-        MY_MAC=$(cat /sys/class/net/$i/address)
-        echo "$i ($MY_MAC)"
-    fi
-done
-
-#nova compute
-yum -y install openstack-nova-compute sysfsutils libvirt-daemon-config-nwfilter
-
-sed -i.bak "/\[DEFAULT\]/a \
+sed -i.liberty_orig "/\[DEFAULT\]/a \
 rpc_backend = rabbit\n\
-rabbit_host = $CONTROLLER_IP\n\
 auth_strategy = keystone\n\
 my_ip = $THISHOST_IP\n\
-vnc_enabled = True\n\
-vncserver_listen = 0.0.0.0\n\
-vncserver_proxyclient_address = $THISHOST_IP\n\
-novncproxy_base_url = http://$CONTROLLER_IP:6080/vnc_auto.html\n\
 network_api_class = nova.network.neutronv2.api.API\n\
 security_group_api = neutron\n\
 linuxnet_interface_driver = nova.network.linux_net.LinuxOVSInterfaceDriver\n\
 firewall_driver = nova.virt.firewall.NoopFirewallDriver" /etc/nova/nova.conf
 
-sed -i "/\[keystone_authtoken\]/a \
-auth_uri = http://$CONTROLLER_IP:5000/v2.0\n\
-identity_uri = http://$CONTROLLER_IP:35357\n\
-admin_tenant_name = service\n\
-admin_user = nova\n\
-admin_password = $SERVICE_PWD" /etc/nova/nova.conf
+sed -i "/\[oslo_messaging_rabbit\]/a \
+rabbit_host = $CONTROLLER_IP\n\
+rabbit_userid = openstack\n\
+rabbit_password = $SERVICE_PWD\n" /etc/nova/nova.conf
 
-sed -i "/\[glance\]/a host = $CONTROLLER_IP" /etc/nova/nova.conf
+sed -i "/\[keystone_authtoken\]/a \
+auth_uri = http://$CONTROLLER_IP:5000\n\
+auth_url = http://$CONTROLLER_IP:35357\n\
+auth_plugin = password\n\
+project_domain_id = default\n\
+user_domain_id = default\n\
+project_name = service\n\
+username = nova\n\
+password = $SERVICE_PWD\n" /etc/nova/nova.conf
+
+sed -i "/\[vnc\]/a \
+enabled = True\n\
+vncserver_listen = 0.0.0.0\n\
+vncserver_proxyclient_address = \$my_ip\n\
+novncproxy_base_url = http://$CONTROLLER_IP:6080/vnc_auto.html\n" /etc/nova/nova.conf
+
+sed -i "/\[glance\]/a \
+host = $CONTROLLER_IP\n" /etc/nova/nova.conf
+
+sed -i "/\[oslo_concurrency\]/a \
+lock_path = /var/lib/nova/tmp\n" /etc/nova/nova.conf
 
 #if compute node is virtual - change virt_type to qemu
 if [ $(egrep -c '(vmx|svm)' /proc/cpuinfo) == "0" ]; then
-    sed -i '/\[libvirt\]/a virt_type = qemu' /etc/nova/nova.conf
+    sed -i "/\[libvirt\]/a \
+virt_type = qemu" /etc/nova/nova.conf
 fi
 
-#install neutron
-yum -y install openstack-neutron-ml2 openstack-neutron-openvswitch
+systemctl enable libvirtd.service openstack-nova-compute.service
+systemctl start libvirtd.service openstack-nova-compute.service
 
-sed -i '0,/\[DEFAULT\]/s//\[DEFAULT\]\
-rpc_backend = rabbit\n\
-rabbit_host = '"$CONTROLLER_IP"'\
-auth_strategy = keystone\
-core_plugin = ml2\
-service_plugins = router\
-allow_overlapping_ips = True/' /etc/neutron/neutron.conf
+## NEUTRON
+yum -y install openstack-neutron openstack-neutron-linuxbridge ebtables ipset
+
+#edit /etc/neutron/neutron.conf
+sed -i.liberty_orig "/\[DEFAULT\]/a \
+auth_strategy = keystone\n\
+rpc_backend = rabbit\n" /etc/neutron/neutron.conf
+
+sed -i 's/^connection/#connection/g' /etc/neutron/neutron.conf
+
+sed -i "/\[oslo_messaging_rabbit\]/a \
+rabbit_host = $CONTROLLER_IP\n\
+rabbit_userid = openstack\n\
+rabbit_password = $SERVICE_PWD\n" /etc/neutron/neutron.conf
 
 sed -i "/\[keystone_authtoken\]/a \
-auth_uri = http://$CONTROLLER_IP:5000/v2.0\n\
-identity_uri = http://$CONTROLLER_IP:35357\n\
-admin_tenant_name = service\n\
-admin_user = neutron\n\
-admin_password = $SERVICE_PWD" /etc/neutron/neutron.conf
+auth_uri = http://$CONTROLLER_IP:5000\n\
+auth_url = http://$CONTROLLER_IP:35357\n\
+auth_plugin = password\n\
+project_domain_id = default\n\
+user_domain_id = default\n\
+project_name = service\n\
+username = neutron\n\
+password = $SERVICE_PWD\n" /etc/neutron/neutron.conf
 
-#edit /etc/neutron/plugins/ml2/ml2_conf.ini
-sed -i "/\[ml2\]/a \
-type_drivers = flat,gre\n\
-tenant_network_types = gre\n\
-mechanism_drivers = openvswitch" /etc/neutron/plugins/ml2/ml2_conf.ini
+sed -i "/\[oslo_concurrency\]/a \
+lock_path = /var/lib/neutron/tmp\n" /etc/neutron/neutron.conf
 
-sed -i "/\[ml2_type_gre\]/a \
-tunnel_id_ranges = 1:1000" /etc/neutron/plugins/ml2/ml2_conf.ini
+#get management and public NIC infos
+for i in $(/usr/bin/ls /sys/class/net); do
+    if [ "$(cat /sys/class/net/$i/ifindex)" == '2' ]; then
+        MGT_NIC=$i
+    fi
+    if [ "$(cat /sys/class/net/$i/ifindex)" == '3' ]; then
+        PUB_NIC=$i
+    fi
+done
+
+echo "MGT = $MGT_NIC / PUB = $PUB_NIC"
+
+#edit /etc/neutron/plugins/ml2/linuxbridge_agent.ini
+sed -i.liberty_orig "/\[linux_bridge\]/a \
+physical_interface_mappings = public:$PUB_NIC" /etc/neutron/plugins/ml2/linuxbridge_agent.ini
+
+sed -i "/\[vxlan\]/a \
+enable_vxlan = True\n\
+local_ip = $THISHOST_IP\n\
+l2_population = True\n" /etc/neutron/plugins/ml2/linuxbridge_agent.ini
+
+sed -i "/\[agent\]/a \
+prevent_arp_spoofing = True" /etc/neutron/plugins/ml2/linuxbridge_agent.ini
 
 sed -i "/\[securitygroup\]/a \
 enable_security_group = True\n\
-enable_ipset = True\n\
-firewall_driver = neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver\n\
-[ovs]\n\
-local_ip = $THISHOST_TUNNEL_IP\n\
-enable_tunneling = True\n\
-[agent]\n\
-tunnel_types = gre" /etc/neutron/plugins/ml2/ml2_conf.ini
+firewall_driver = neutron.agent.linux.iptables_firewall.IptablesFirewallDriver\n" /etc/neutron/plugins/ml2/linuxbridge_agent.ini
 
-systemctl enable openvswitch.service
-systemctl start openvswitch.service
-
+#configure nova to use neutron
 sed -i "/\[neutron\]/a \
-url = http://$CONTROLLER_IP:9696\n\
-auth_strategy = keystone\n\
-admin_auth_url = http://$CONTROLLER_IP:35357/v2.0\n\
-admin_tenant_name = service\n\
-admin_username = neutron\n\
-admin_password = $SERVICE_PWD" /etc/nova/nova.conf
+url = http://$NETWORK_IP:9696\n\
+auth_url = http://$CONTROLLER_IP:35357\n\
+auth_plugin = password\n\
+project_domain_id = default\n\
+user_domain_id = default\n\
+region_name = RegionOne\n\
+project_name = service\n\
+username = neutron\n\
+password = $SERVICE_PWD\n" /etc/nova/nova.conf
 
-ln -s /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugin.ini
+systemctl restart openstack-nova-compute.service
+systemctl enable neutron-linuxbridge-agent.service
+systemctl start neutron-linuxbridge-agent.service
 
-cp /usr/lib/systemd/system/neutron-openvswitch-agent.service \
-  /usr/lib/systemd/system/neutron-openvswitch-agent.service.orig
-sed -i 's,plugins/openvswitch/ovs_neutron_plugin.ini,plugin.ini,g' \
-  /usr/lib/systemd/system/neutron-openvswitch-agent.service
-
-systemctl enable libvirtd.service openstack-nova-compute.service
-systemctl start libvirtd.service
-systemctl start openstack-nova-compute.service
-systemctl enable neutron-openvswitch-agent.service
-systemctl start neutron-openvswitch-agent.service
-
-echo 'export OS_TENANT_NAME=admin' > creds
-echo 'export OS_USERNAME=admin' >> creds
-echo 'export OS_PASSWORD='"$ADMIN_PWD" >> creds
-echo 'export OS_AUTH_URL=http://'"$CONTROLLER_IP"':35357/v2.0' >> creds
-source creds
+#EOF
