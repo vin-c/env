@@ -20,22 +20,10 @@ for i in $(ls /sys/class/net); do
         mv /etc/sysconfig/network-scripts/ifcfg-$NIC.bak .
     fi
     if [ "$(cat /sys/class/net/$i/ifindex)" == '3' ]; then
-        #create config file for Tunnel NIC
-        echo "HWADDR=\"$MY_MAC\"" > /etc/sysconfig/network-scripts/ifcfg-$NIC
-        echo "TYPE=\"Ethernet\"" >> /etc/sysconfig/network-scripts/ifcfg-$NIC
-        echo "BOOTPROTO=\"none\"" >> /etc/sysconfig/network-scripts/ifcfg-$NIC
-        echo "IPV4_FAILURE_FATAL=\"no\"" >> /etc/sysconfig/network-scripts/ifcfg-$NIC
-        echo "NAME=\"$NIC\"" >> /etc/sysconfig/network-scripts/ifcfg-$NIC
-        echo "ONBOOT=\"yes\"" >> /etc/sysconfig/network-scripts/ifcfg-$NIC
-        echo "IPADDR=\"$THISHOST_TUNNEL_IP\"" >> /etc/sysconfig/network-scripts/ifcfg-$NIC
-        echo "NETMASK=\"$THISHOST_TUNNEL_NETMASK\"" >> /etc/sysconfig/network-scripts/ifcfg-$NIC
-
-    fi        
-    if [ "$(cat /sys/class/net/$i/ifindex)" == '4' ]; then
         #create config file for External NIC
         echo "HWADDR=\"$MY_MAC\"" > /etc/sysconfig/network-scripts/ifcfg-$NIC
         echo "TYPE=\"Ethernet\"" >> /etc/sysconfig/network-scripts/ifcfg-$NIC
-        echo "BOOTPROTO=\"none\"" >> /etc/sysconfig/network-scripts/ifcfg-$NIC
+        echo "BOOTPROTO=\"dhcp\"" >> /etc/sysconfig/network-scripts/ifcfg-$NIC
         echo "IPV4_FAILURE_FATAL=\"no\"" >> /etc/sysconfig/network-scripts/ifcfg-$NIC
         echo "NAME=\"$NIC\"" >> /etc/sysconfig/network-scripts/ifcfg-$NIC
         echo "ONBOOT=\"yes\"" >> /etc/sysconfig/network-scripts/ifcfg-$NIC
@@ -44,4 +32,4 @@ done
 
 #setup hostname
 echo "$THISHOST_NAME" > /etc/hostname
-echo "$THISHOST_IP    $THISHOST_NAME" >> /etc/hosts
+cp os.hosts /etc/hosts
