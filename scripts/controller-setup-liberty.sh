@@ -15,6 +15,10 @@ sed -i 's/^#server\ 0/server\ 134.158.120.1\ iburst\n#server\ 0/g' /etc/chrony.c
 sed -i 's/^#allow/allow\ 10.0.0.0\/24\n#allow/' /etc/chrony.conf
 systemctl start chronyd.service
 
+#loosen things up
+systemctl stop firewalld.service
+systemctl disable firewalld.service
+
 #openstack repos
 yum -y install centos-release-openstack-liberty 
 yum -y upgrade

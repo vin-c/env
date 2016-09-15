@@ -9,6 +9,10 @@ sed -i 's/^server/#server/g' /etc/chrony.conf
 sed -i 's/^#server\ 0/server\ controller\ iburst\n#server\ 0/g' /etc/chrony.conf
 systemctl start chronyd.service
 
+#loosen things up
+systemctl stop firewalld.service
+systemctl disable firewalld.service
+
 #openstack repos
 yum -y install centos-release-openstack-liberty
 yum -y upgrade
@@ -19,7 +23,7 @@ systemctl enable lvm2-lvmetad.service
 systemctl start lvm2-lvmetad.service
 
 #add filter to /etc/lvm/lvm.conf
-sed -i 's;^    # By default we accept every block device:;    # Filter for current device and cinder volume\n    filter = [ "a/sdb/", "r/.*/"]\n\n    # By default we accept every block device:;g' /etc/lvm/lvm.conf
+sed -i '/Configuration option devices\/global_filter/i\    # Filter for current device and cinder volume\n    filter = \[ \"a\/sdb\/\", \"r\/.*\/\"\]\n' /etc/lvm/lvm.conf
 
 #create pv/vg
 pvcreate /dev/sdb

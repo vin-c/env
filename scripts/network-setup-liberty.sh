@@ -9,6 +9,10 @@ sed -i 's/^server/#server/g' /etc/chrony.conf
 sed -i 's/^#server\ 0/server\ controller\ iburst\n#server\ 0/g' /etc/chrony.conf
 systemctl start chronyd.service
 
+#loosen things up
+systemctl stop firewalld.service
+systemctl disable firewalld.service
+
 #openstack repos
 yum -y install centos-release-openstack-liberty
 yum -y upgrade
