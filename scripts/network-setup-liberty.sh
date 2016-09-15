@@ -95,7 +95,7 @@ sed -i "/^\[securitygroup\]/a \
 enable_ipset = True\n" /etc/neutron/plugins/ml2/ml2_conf.ini
 
 #edit /etc/neutron/plugins/ml2/linuxbridge_agent.ini
-sed -i.liberty_orig 's/^[a-z]/#[a-z]/g'
+sed -i.liberty_orig 's/^[a-z]/#[a-z]/g' /etc/neutron/plugins/ml2/linuxbridge_agent.ini
 sed -i "/^\[linux_bridge\]/a \
 physical_interface_mappings = public:$PUB_NIC" /etc/neutron/plugins/ml2/linuxbridge_agent.ini
 
