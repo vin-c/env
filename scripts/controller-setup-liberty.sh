@@ -203,9 +203,9 @@ openstack user create --domain default --password $SERVICE_PWD nova
 openstack role add --project service --user nova admin
 openstack service create --name nova --description "OpenStack Compute" compute
 
-openstack endpoint create --region RegionOne compute public http://controller:8774/v2/%\(tenant_id\)s
-openstack endpoint create --region RegionOne compute internal http://controller:8774/v2/%\(tenant_id\)s
-openstack endpoint create --region RegionOne compute admin http://controller:8774/v2/%\(tenant_id\)s
+openstack endpoint create --region RegionOne compute public http://$CONTROLLER_IP:8774/v2/%\(tenant_id\)s
+openstack endpoint create --region RegionOne compute internal http://$CONTROLLER_IP:8774/v2/%\(tenant_id\)s
+openstack endpoint create --region RegionOne compute admin http://$CONTROLLER_IP:8774/v2/%\(tenant_id\)s
 
 #install the nova controller components
 yum -y install openstack-nova-api openstack-nova-cert openstack-nova-conductor \
@@ -317,12 +317,12 @@ openstack user create --domain default --password $SERVICE_PWD cinder
 openstack role add --project service --user cinder admin
 openstack service create --name cinder --description "OpenStack Block Storage" volume
 openstack service create --name cinderv2 --description "OpenStack Block Storage" volumev2
-openstack endpoint create --region RegionOne volume public http://controller:8776/v1/%\(tenant_id\)s
-openstack endpoint create --region RegionOne volume internal http://controller:8776/v1/%\(tenant_id\)s
-openstack endpoint create --region RegionOne volume admin http://controller:8776/v1/%\(tenant_id\)s
-openstack endpoint create --region RegionOne volumev2 public http://controller:8776/v2/%\(tenant_id\)s
-openstack endpoint create --region RegionOne volumev2 internal http://controller:8776/v2/%\(tenant_id\)s
-openstack endpoint create --region RegionOne volumev2 admin http://controller:8776/v2/%\(tenant_id\)s
+openstack endpoint create --region RegionOne volume public http://$CONTROLLER_IP:8776/v1/%\(tenant_id\)s
+openstack endpoint create --region RegionOne volume internal http://$CONTROLLER_IP:8776/v1/%\(tenant_id\)s
+openstack endpoint create --region RegionOne volume admin http://$CONTROLLER_IP:8776/v1/%\(tenant_id\)s
+openstack endpoint create --region RegionOne volumev2 public http://$CONTROLLER_IP:8776/v2/%\(tenant_id\)s
+openstack endpoint create --region RegionOne volumev2 internal http://$CONTROLLER_IP:8776/v2/%\(tenant_id\)s
+openstack endpoint create --region RegionOne volumev2 admin http://$CONTROLLER_IP:8776/v2/%\(tenant_id\)s
 
 #install cinder controller
 yum -y install openstack-cinder python-cinderclient
