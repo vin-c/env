@@ -29,22 +29,22 @@ vgcreate cinder-volumes /dev/sdb
 yum -y install openstack-cinder targetcli python-oslo-policy
 
 #edit /etc/cinder/cinder.conf
-sed -i.liberty_orig "/\[database\]/a \
+sed -i.liberty_orig "/^\[database\]/a \
 connection = mysql://cinder:$SERVICE_PWD@$CONTROLLER_IP/cinder" /etc/cinder/cinder.conf
 
-sed -i "/\[DEFAULT\]/a \
+sed -i "/^\[DEFAULT\]/a \
 rpc_backend = rabbit\n\
 auth_strategy = keystone\n\
 enabled_backends = lvm\n\
 glance_host = $CONTROLLER_IP\n\
 my_ip = $THISHOST_IP\n"  /etc/cinder/cinder.conf
 
-sed -i "/\[oslo_messaging_rabbit\]/a \
+sed -i "/^\[oslo_messaging_rabbit\]/a \
 rabbit_host = $CONTROLLER_IP\n\
 rabbit_userid = openstack\n\
 rabbit_password = $SERVICE_PWD\n" /etc/cinder/cinder.conf
 
-sed -i "/\[keystone_authtoken\]/a \
+sed -i "/^\[keystone_authtoken\]/a \
 auth_uri = http://$CONTROLLER_IP:5000\n\
 auth_url = http://$CONTROLLER_IP:35357\n\
 auth_plugin = password\n\
@@ -54,13 +54,13 @@ project_name = service\n\
 username = cinder\n\
 password = $SERVICE_PWD\n" /etc/cinder/cinder.conf
 
-sed -i "/\[lvm\]/a \
+sed -i "/^\[lvm\]/a \
 volume_driver = cinder.volume.drivers.lvm.LVMVolumeDriver\n\
 volume_group = cinder-volumes\n\
 iscsi_protocol = iscsi\n\
 iscsi_helper = lioadm\n" /etc/cinder/cinder.conf
 
-sed -i "/\[oslo_concurrency\]/a \
+sed -i "/^\[oslo_concurrency\]/a \
 lock_path = /var/lib/cinder/tmp\n" /etc/cinder/cinder.conf
 
 systemctl enable openstack-cinder-volume.service target.service

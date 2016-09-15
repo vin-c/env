@@ -78,14 +78,14 @@ systemctl start memcached.service
 
 #edit /etc/keystone.conf
 sed -i.liberty_orig "s/#admin_token = ADMIN/admin_token = $ADMIN_TOKEN/g" /etc/keystone/keystone.conf
-sed -i "/\[database\]/a \
+sed -i "/^\[database\]/a \
 connection = mysql://keystone:$SERVICE_PWD@$CONTROLLER_IP/keystone\n" /etc/keystone/keystone.conf
-sed -i "/\[memcache\]/a \
+sed -i "/^\[memcache\]/a \
 servers = localhost:11211\n" /etc/keystone/keystone.conf
-sed -i "/\[token\]/a \
+sed -i "/^\[token\]/a \
 provider = uuid\n\
 driver = memcache\n" /etc/keystone/keystone.conf
-sed -i "/\[revoke\]/a \
+sed -i "/^\[revoke\]/a \
 driver = sql\n" /etc/keystone/keystone.conf
 
 #populate identity database
@@ -110,7 +110,7 @@ openstack endpoint create --region RegionOne identity public http://$CONTROLLER_
 openstack endpoint create --region RegionOne identity internal http://$CONTROLLER_IP:5000/v2.0
 openstack endpoint create --region RegionOne identity admin http://$CONTROLLER_IP:35357/v2.0
 openstack project create --domain default --description "Admin Project" admin
-openstack user create --domaine default --password $ADMIN_PWD admin
+openstack user create --domain default --password $ADMIN_PWD admin
 openstack role create admin
 openstack role add --project admin --user admin admin
 openstack project create --domain default --description "Service Project" service
@@ -128,7 +128,7 @@ source admin-creds
 ## GLANCE image service
 
 #create keystone entries for glance
-openstack user create --domaine default --password $SERVICE_PWD glance
+openstack user create --domain default --password $SERVICE_PWD glance
 openstack role add --project service --user glance admin
 openstack service create --name glance --description "OpenStack Image service" image
 openstack endpoint create --region RegionOne image public http://$CONTROLLER_IP:9292
@@ -139,10 +139,10 @@ openstack endpoint create --region RegionOne image admin http://$CONTROLLER_IP:9
 yum -y install openstack-glance python-glanceclient python-glance
 
 #edit /etc/glance/glance-api.conf
-sed -i.liberty_orig "/\[database\]/a \
+sed -i.liberty_orig "/^\[database\]/a \
 connection = mysql://glance:$SERVICE_PWD@$CONTROLLER_IP/glance\n" /etc/glance/glance-api.conf
 
-sed -i "/\[keystone_authtoken\]/a \
+sed -i "/^\[keystone_authtoken\]/a \
 auth_uri = http://$CONTROLLER_IP:5000\n\
 auth_url = http://$CONTROLLER_IP:35357\n\
 auth_plugin = password\n\
@@ -152,21 +152,21 @@ project_name = service\n\
 username = glance\n\
 password = $SERVICE_PWD\n" /etc/glance/glance-api.conf
 
-sed -i "/\[paste_deploy\]/a \
+sed -i "/^\[paste_deploy\]/a \
 flavor = keystone\n" /etc/glance/glance-api.conf
 
-sed -i "/\[glance_store\]/a \
+sed -i "/^\[glance_store\]/a \
 default_store = file\n\
 filesystem_store_datadir = /var/lib/glance/images/\n" /etc/glance/glance-api.conf
 
-sed -i "/\[DEFAULT\]/a \
+sed -i "/^\[DEFAULT\]/a \
 notification_driver = noop\n" /etc/glance/glance-api.conf
 
 #edit /etc/glance/glance-registry.conf
-sed -i.liberty_orig "/\[database\]/a \
+sed -i.liberty_orig "/^\[database\]/a \
 connection = mysql://glance:$SERVICE_PWD@$CONTROLLER_IP/glance\n" /etc/glance/glance-registry.conf
 
-sed -i "/\[keystone_authtoken\]/a \
+sed -i "/^\[keystone_authtoken\]/a \
 auth_uri = http://$CONTROLLER_IP:5000\n\
 auth_url = http://$CONTROLLER_IP:35357\n\
 auth_plugin = password\n\
@@ -176,10 +176,10 @@ project_name = service\n\
 username = glance\n\
 password = $SERVICE_PWD\n" /etc/glance/glance-registry.conf
 
-sed -i "/\[paste_deploy\]/a \
+sed -i "/^\[paste_deploy\]/a \
 flavor = keystone\n" /etc/glance/glance-registry.conf
 
-sed -i "/\[DEFAULT\]/a \
+sed -i "/^\[DEFAULT\]/a \
 notification_driver = noop\n" /etc/glance/glance-registry.conf
 
 #start glance
@@ -209,10 +209,10 @@ yum -y install openstack-nova-api openstack-nova-cert openstack-nova-conductor \
   python-novaclient
 
 #edit /etc/nova/nova.conf
-sed -i.liberty_orig "/\[database\]/a \
+sed -i.liberty_orig "/^\[database\]/a \
 connection = mysql://nova:$SERVICE_PWD@$CONTROLLER_IP/nova\n" /etc/nova/nova.conf
 
-sed -i "/\[DEFAULT\]/a \
+sed -i "/^\[DEFAULT\]/a \
 rpc_backend = rabbit\n\
 my_ip = $CONTROLLER_IP\n\
 network_api_class = nova.network.neutronv2.api.API\n\
@@ -222,12 +222,12 @@ firewall_driver = nova.virt.firewall.NoopFirewallDriver\n\
 enabled_apis=osapi_compute,metadata\n\
 auth_strategy = keystone\n" /etc/nova/nova.conf
 
-sed -i "/\[oslo_messaging_rabbit\]/a \
+sed -i "/^\[oslo_messaging_rabbit\]/a \
 rabbit_host = $CONTROLLER_IP\n\
 rabbit_userid = openstack\n\
 rabbit_password = $SERVICE_PWD\n" /etc/nova/nova.conf
 
-sed -i "/\[keystone_authtoken\]/a \
+sed -i "/^\[keystone_authtoken\]/a \
 auth_uri = http://$CONTROLLER_IP:5000\n\
 auth_url = http://$CONTROLLER_IP:35357\n\
 auth_plugin = password\n\
@@ -237,14 +237,14 @@ project_name = service\n\
 username = nova\n\
 password = $SERVICE_PWD\n" /etc/nova/nova.conf
 
-sed -i "/\[vnc\]/a \
+sed -i "/^\[vnc\]/a \
 vncserver_listen = \$my_ip\n\
 vncserver_proxyclient_address = \$my_ip\n" /etc/nova/nova.conf
 
-sed -i "/\[glance\]/a \
+sed -i "/^\[glance\]/a \
 host = $CONTROLLER_IP\n" /etc/nova/nova.conf
 
-sed -i "/\[oslo_concurrency\]/a \
+sed -i "/^\[oslo_concurrency\]/a \
 lock_path = /var/lib/nova/tmp\n" /etc/nova/nova.conf
 
 #start nova
@@ -268,7 +268,7 @@ openstack endpoint create --region RegionOne network internal http://$CONTROLLER
 openstack endpoint create --region RegionOne network admin http://$CONTROLLER_IP:9696
 
 #configure nova to use neutron
-sed -i "/\[neutron\]/a \
+sed -i "/^\[neutron\]/a \
 url = http://$NETWORK_IP:9696\n\
 auth_url = http://$CONTROLLER_IP:35357\n\
 auth_plugin = password\n\
@@ -324,20 +324,20 @@ openstack endpoint create --region RegionOne volumev2 admin http://controller:87
 yum -y install openstack-cinder python-cinderclient
 
 #edit /etc/cinder/cinder.conf
-sed -i.liberty_orig "/\[database\]/a \
+sed -i.liberty_orig "/^\[database\]/a \
 connection = mysql://cinder:$SERVICE_PWD@$CONTROLLER_IP/cinder" /etc/cinder/cinder.conf
 
-sed -i "/\[DEFAULT\]/a \
+sed -i "/^\[DEFAULT\]/a \
 rpc_backend = rabbit\n\
 auth_strategy = keystone\n\
 my_ip = $CONTROLLER_IP" /etc/cinder/cinder.conf
 
-sed -i "/\[oslo_messaging_rabbit\]/a \
+sed -i "/^\[oslo_messaging_rabbit\]/a \
 rabbit_host = $CONTROLLER_IP\n\
 rabbit_userid = openstack\n\
 rabbit_password = $SERVICE_PWD\n" /etc/cinder/cinder.conf 
 
-sed -i "/\[keystone_authtoken\]/a \
+sed -i "/^\[keystone_authtoken\]/a \
 auth_uri = http://$CONTROLLER_IP:5000\n\
 auth_url = http://$CONTROLLER_IP:35357\n\
 auth_plugin = password\n\
@@ -347,11 +347,11 @@ project_name = service\n\
 username = cinder\n\
 password = $SERVICE_PWD\n" /etc/cinder/cinder.conf
 
-sed -i "/\[oslo_concurrency\]/a \
+sed -i "/^\[oslo_concurrency\]/a \
 lock_path = /var/lib/cinder/tmp\n" /etc/cinder/cinder.conf
 
 #configure nova to use cinder
-sed -i "/\[cinder\]/a \
+sed -i "/^\[cinder\]/a \
 os_region_name = RegionOne\n" /etc/nova/nova.conf
 
 #start cinder controller
