@@ -296,7 +296,7 @@ sed -i 's/OPENSTACK_HOST = "127.0.0.1"/OPENSTACK_HOST = "'"$CONTROLLER_IP"'"/' /
 sed -i "s/LocMemCache',/LocMemCache',\n        'LOCATION': '127.0.0.1:11211',/" /etc/openstack-dashboard/local_settings
 sed -i 's/django.core.cache.backends.locmem.LocMemCache/django.core.cache.backends.memcached.MemcachedCache/g' /etc/openstack-dashboard/local_settings
 sed -i 's/_member_/user/' /etc/openstack-dashboard/local_settings
-sed -i 's/#OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = False/OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True/g' /etc/openstack-dashboard/local_settings
+#sed -i 's/#OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = False/OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True/g' /etc/openstack-dashboard/local_settings
 
 echo 'OPENSTACK_API_VERSIONS = {
     "identity": 3,

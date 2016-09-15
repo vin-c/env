@@ -6,7 +6,7 @@ source config
 yum -y install chrony
 systemctl enable chronyd.service
 sed -i 's/^server/#server/g' /etc/chrony.conf
-sed -i 's/^#server\ 0/server\ controller\ iburst\n#server\ 0/g' /etc/chrony.conf
+sed -i "s/^#server\ 0/server\ $CONTROLLER_IP\ iburst\n#server\ 0/g" /etc/chrony.conf
 systemctl start chronyd.service
 
 #loosen things up
