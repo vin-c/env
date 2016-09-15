@@ -154,4 +154,24 @@ systemctl enable neutron-server.service neutron-linuxbridge-agent.service \
 systemctl start neutron-server.service neutron-linuxbridge-agent.service \
     neutron-dhcp-agent.service neutron-metadata-agent.service neutron-l3-agent.service
 
+#create network resources
+source admin-creds
+neutron net-create ext-net --provider:network_type flat \
+   --provider:physical_network public --router:external --shared
+
+neutron subnet-create --name ext-subnet --enable_dhcp=False \
+   --allocation-pool=start=172.16.117.220,end=172.16.117.250 \
+   --gateway=172.16.117.2 ext-net 172.16.117.0/24
+
+source user1-creds
+neutron net-create demo-net
+neutron subnet-create --name demo-subnet demo-net 10.0.3.0/24
+neutron router-create demo-router
+neutron router-gateway-set demo-router ext-net
+neutron router-interface-add demo-router demo-subnet
+
+#updating security rules to allow SSH and PING
+nova secgroup-add-rule default tcp 22 22 0.0.0.0/0
+nova secgroup-add-rule default icmp -1 -1 0.0.0.0/0
+
 #EOF

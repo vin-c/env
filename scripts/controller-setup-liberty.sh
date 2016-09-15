@@ -124,6 +124,8 @@ openstack user create --domain default --password $USER_PWD user2
 openstack role create user
 openstack role add --project demo --user user1 user
 openstack role add --project demo --user user2 user
+openstack role add --project demo --user admin user
+openstack role add --project demo --user admin admin
 
 unset OS_TOKEN OS_URL OS_IDENTITY_API_VERSION
 
@@ -363,5 +365,12 @@ su -s /bin/sh -c "cinder-manage db sync" cinder
 systemctl enable openstack-cinder-api.service openstack-cinder-scheduler.service
 systemctl start openstack-cinder-api.service openstack-cinder-scheduler.service
 systemctl restart openstack-nova-api.service
+
+#create resources
+for i in `seq 1 5`; do
+openstack flavor delete $i
+done
+openstack flavor create --id 0 --ram 128 --disk 1 --vcpus 1 --public m1.micro
+openstack flavor create --id 1 --ram 256 --disk 1 --vcpus 1 --public m1.tiny
 
 #EOF
