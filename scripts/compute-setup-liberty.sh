@@ -69,7 +69,8 @@ systemctl start libvirtd.service openstack-nova-compute.service
 yum -y install openstack-neutron openstack-neutron-linuxbridge ebtables ipset
 
 #edit /etc/neutron/neutron.conf
-sed -i.liberty_orig "/^\[DEFAULT\]/a \
+sed -i.liberty_orig 's/^[a-z]/#[a-z]/g' /etc/neutron/neutron.conf
+sed -i "/^\[DEFAULT\]/a \
 auth_strategy = keystone\n\
 rpc_backend = rabbit\n" /etc/neutron/neutron.conf
 
