@@ -49,6 +49,7 @@ alias vi='vim'
 alias nocom="egrep -v '^#|^$'"
 alias gowork="cd ~/Documents/openstack && source admin-creds"
 alias os="openstack"
+alias osi="openstack --insecure"
 
 # debian
 alias acs='apt-cache search'
