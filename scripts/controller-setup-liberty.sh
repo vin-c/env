@@ -188,7 +188,7 @@ systemctl enable openstack-glance-api.service openstack-glance-registry.service
 systemctl start openstack-glance-api.service openstack-glance-registry.service
 
 #upload the cirros image to glance
-wget http://cdn.download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img
+wget http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img
 glance image-create --name "cirros-0.3.4-x86_64" --file cirros-0.3.4-x86_64-disk.img \
   --disk-format qcow2 --container-format bare --visibility public --progress
 
