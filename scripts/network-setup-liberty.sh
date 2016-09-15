@@ -35,7 +35,8 @@ echo "MGT = $MGT_NIC / PUB = $PUB_NIC"
 yum -y install openstack-neutron openstack-neutron-ml2 openstack-neutron-linuxbridge python-neutronclient ebtables ipset
 
 #edit /etc/neutron/neutron.conf
-sed -i.liberty_orig "/^\[database\]/a \
+sed -i.liberty_orig 's/^[a-z]/#[a-z]/g' /etc/neutron/neutron.conf
+sed -i "/^\[database\]/a \
 connection = mysql://neutron:$SERVICE_PWD@$CONTROLLER_IP/neutron\n" /etc/neutron/neutron.conf
 
 sed -i "/^\[DEFAULT\]/a \
@@ -77,7 +78,8 @@ sed -i "/^\[oslo_concurrency\]/a \
 lock_path = /var/lib/neutron/tmp\n" /etc/neutron/neutron.conf
 
 #edit /etc/neutron/plugins/ml2/ml2_conf.ini
-sed -i.liberty_orig "/^\[ml2\]/a \
+sed -i.liberty_orig 's/^[a-z]/#[a-z]/g' /etc/neutron/plugins/ml2/ml2_conf.ini
+sed -i "/^\[ml2\]/a \
 type_drivers = flat,vlan,vxlan\n\
 tenant_network_types = vxlan\n\
 mechanism_drivers = linuxbridge,l2population\n\
@@ -93,7 +95,8 @@ sed -i "/^\[securitygroup\]/a \
 enable_ipset = True\n" /etc/neutron/plugins/ml2/ml2_conf.ini
 
 #edit /etc/neutron/plugins/ml2/linuxbridge_agent.ini
-sed -i.liberty_orig "/^\[linux_bridge\]/a \
+sed -i.liberty_orig 's/^[a-z]/#[a-z]/g'
+sed -i "/^\[linux_bridge\]/a \
 physical_interface_mappings = public:$PUB_NIC" /etc/neutron/plugins/ml2/linuxbridge_agent.ini
 
 sed -i "/^\[vxlan\]/a \
@@ -109,12 +112,14 @@ enable_security_group = True\n\
 firewall_driver = neutron.agent.linux.iptables_firewall.IptablesFirewallDriver\n" /etc/neutron/plugins/ml2/linuxbridge_agent.ini
 
 #edit /etc/neutron/l3_agent.ini
-sed -i.liberty_orig "/^\[DEFAULT\]/a \
+sed -i.liberty_orig 's/^[a-z]/#[a-z]/g' /etc/neutron/l3_agent.ini
+sed -i "/^\[DEFAULT\]/a \
 interface_driver = neutron.agent.linux.interface.BridgeInterfaceDriver\n\
 external_network_bridge =\n" /etc/neutron/l3_agent.ini
 
 #edit /etc/neutron/dhcp_agent.ini
-sed -i.liberty_orig "/^\[DEFAULT\]/a \
+sed -i.liberty_orig 's/^[a-z]/#[a-z]/g' /etc/neutron/dhcp_agent.ini
+sed -i "/^\[DEFAULT\]/a \
 interface_driver = neutron.agent.linux.interface.BridgeInterfaceDriver\n\
 dhcp_driver = neutron.agent.linux.dhcp.Dnsmasq\n\
 dnsmasq_config_file = /etc/neutron/dnsmasq-neutron.conf\n\
@@ -125,8 +130,8 @@ echo "dhcp-option-force=26,1450" > /etc/neutron/dnsmasq-neutron.conf
 
 ## METADATA Agent
 #edit /etc/neutron/metadata_agent.ini
-
-sed -i.liberty_orig "/^\[DEFAULT\]/a \
+sed -i.liberty_orig 's/^[a-z]/#[a-z]/g' /etc/neutron/metadata_agent.ini
+sed -i "/^\[DEFAULT\]/a \
 nova_metadata_ip = $NETWORK_IP\n\
 metadata_proxy_shared_secret = $META_PWD\n\
 auth_uri = http://$CONTROLLER_IP:5000\n\

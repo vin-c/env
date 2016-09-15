@@ -23,7 +23,7 @@ systemctl enable lvm2-lvmetad.service
 systemctl start lvm2-lvmetad.service
 
 #add filter to /etc/lvm/lvm.conf
-sed -i '/Configuration option devices\/global_filter/i\    # Filter for current device and cinder volume\n    filter = \[ \"a\/sdb\/\", \"r\/.*\/\"\]\n' /etc/lvm/lvm.conf
+sed -i '/Configuration option devices\/global_filter/i\    # Filter for current device and cinder volume\n    filter = \[ \"a\/sda\/\", \"a\/sdb\/\", \"r\/.*\/\"\]\n' /etc/lvm/lvm.conf
 
 #create pv/vg
 pvcreate /dev/sdb
