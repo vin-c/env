@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Settings custom ids to cirros image and ext-net..."
-
+source config
 source admin-creds
 
 sql=/tmp/sql-dump.sql
@@ -12,10 +12,10 @@ pubnet_id=$(neutron net-list | awk '/ext-net/{print $2}')
 
 mv /var/lib/glance/images/$image_id /var/lib/glance/images/$newimage_id
 
-mysqldump --all-databases -u root -pmisfcr > $sql
+mysqldump --all-databases -u root -p$SERVICE_PWD > $sql
 sed -i "s/$image_id/$newimage_id/g" $sql
 sed -i "s/$pubnet_id/$newpubnet_id/g" $sql
 
-mysql -u root -pmisfcr < $sql
+mysql -u root -p$SERVICE_PWD < $sql
 
 rm $sql
