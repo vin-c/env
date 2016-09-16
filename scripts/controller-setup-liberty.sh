@@ -18,11 +18,13 @@ systemctl start chronyd.service
 #loosen things up
 systemctl stop firewalld.service
 systemctl disable firewalld.service
+setenforce 0
+sed -i 's/^SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
 
 #openstack repos
 yum -y install centos-release-openstack-liberty 
 yum -y upgrade
-yum -y install openstack-selinux python-openstackclient
+yum -y install python-openstackclient
 
 #install database server
 yum -y install mariadb mariadb-server MySQL-python

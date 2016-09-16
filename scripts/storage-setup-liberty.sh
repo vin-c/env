@@ -12,6 +12,8 @@ systemctl start chronyd.service
 #loosen things up
 systemctl stop firewalld.service
 systemctl disable firewalld.service
+setenforce 0
+sed -i 's/^SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
 
 #openstack repos
 yum -y install centos-release-openstack-liberty
