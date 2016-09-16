@@ -43,7 +43,7 @@ rpc_backend = rabbit\n\
 auth_strategy = keystone\n\
 enabled_backends = lvm\n\
 glance_host = $CONTROLLER_IP\n\
-my_ip = $THISHOST_IP\n"  /etc/cinder/cinder.conf
+my_ip = $THISHOST_IP\n" /etc/cinder/cinder.conf
 
 sed -i "/^\[oslo_messaging_rabbit\]/a \
 rabbit_host = $CONTROLLER_IP\n\
@@ -60,11 +60,12 @@ project_name = service\n\
 username = cinder\n\
 password = $SERVICE_PWD\n" /etc/cinder/cinder.conf
 
-sed -i "/^\[lvm\]/a \
+sed -i "/^\[[m-z]/i \
+[lvm]\n\
 volume_driver = cinder.volume.drivers.lvm.LVMVolumeDriver\n\
 volume_group = cinder-volumes\n\
 iscsi_protocol = iscsi\n\
-iscsi_helper = lioadm\n" /etc/cinder/cinder.conf
+iscsi_helper = lioadm\n\n" /etc/cinder/cinder.conf
 
 sed -i "/^\[oslo_concurrency\]/a \
 lock_path = /var/lib/cinder/tmp\n" /etc/cinder/cinder.conf
