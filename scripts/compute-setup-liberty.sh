@@ -13,7 +13,7 @@ systemctl start chronyd.service
 systemctl stop firewalld.service
 systemctl disable firewalld.service
 setenforce 0
-sed -i 's/^SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
+sed -i 's/^SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 
 #openstack repos
 yum -y install centos-release-openstack-liberty
@@ -71,7 +71,7 @@ systemctl start libvirtd.service openstack-nova-compute.service
 yum -y install openstack-neutron openstack-neutron-linuxbridge ebtables ipset
 
 #edit /etc/neutron/neutron.conf
-sed -i.liberty_orig 's/^[a-z]/#[a-z]/g' /etc/neutron/neutron.conf
+sed -i.liberty_orig 's/^[a-z]/#&/g' /etc/neutron/neutron.conf
 sed -i "/^\[DEFAULT\]/a \
 auth_strategy = keystone\n\
 rpc_backend = rabbit\n" /etc/neutron/neutron.conf
