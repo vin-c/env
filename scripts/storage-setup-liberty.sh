@@ -60,7 +60,7 @@ project_name = service\n\
 username = cinder\n\
 password = $SERVICE_PWD\n" /etc/cinder/cinder.conf
 
-sed -i "/^\[[m-z]/i \
+sed -i "/^\[matchmaker_redis\]/i \
 [lvm]\n\
 volume_driver = cinder.volume.drivers.lvm.LVMVolumeDriver\n\
 volume_group = cinder-volumes\n\
