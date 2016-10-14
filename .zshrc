@@ -46,7 +46,8 @@ alias setcl='export CLASSPATH=.:$CLASSPATH'
 alias setdp='export DISPLAY=":0"'
 alias rgrep='grep -R'
 alias vi='vim'
-alias nocom="egrep -v '^#|^$'"
+#alias nocom="egrep -v '^#|^$'"
+alias nocom="sed -r '/^(\s*#|$)/d;'"
 alias gowork="cd ~/Documents/openstack && source admin-creds"
 alias os="openstack"
 alias osi="openstack --insecure"
