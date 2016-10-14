@@ -1,6 +1,7 @@
 # Security Stuff #
 ##################
 .globus
+.creds
 
 # Compiled source #
 ###################
