@@ -1,4 +1,4 @@
 " Use spaces instead of tabs
-set tabstop=4
-set shiftwidth=4
+set tabstop=3
+set shiftwidth=3
 set expandtab

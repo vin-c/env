@@ -177,3 +177,5 @@ case $TERM in
         precmd () {print -Pn "\e]0;%m\a"}
         ;;
 esac
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
