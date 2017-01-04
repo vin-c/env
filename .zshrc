@@ -66,12 +66,19 @@ alias ag='sudo apt-get'
 alias acs='aptitude search'
 alias acp='apt-cache policy'
 
-# redhat
+# redhat/centos
 alias yu='sudo yum update'
 alias yi='sudo yum install'
 alias ys='yum search'
 alias yv='yum info'
-alias sr="systemctl restart"
+alias sr='sudo systemctl restart'
+alias ss='sudo systemctl status'
+alias sdr='sudo systemctl daemon-reload'
+
+# docker
+alias do='docker'
+alias dops='docker ps -a'
+alias dorm='docker rm'
 
 # Global ZSH
 [ -x "/usr/bin/most" ] && export PAGER=most
