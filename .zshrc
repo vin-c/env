@@ -4,31 +4,8 @@
 source ~/.zshrc.oh-my-zsh
 READNULLCMD=${PAGER:-/usr/bin/pager}
 
-# Load Grid environment
-if [[ -f /etc/profile.d/grid-env.sh ]]; then
-	source /etc/profile.d/grid-env.sh
-	export PATH=/opt/glite/yaim/bin:$PATH
-	alias gjc='glite-wms-job-submit -a'
-	alias gjs='glite-wms-job-status'
-fi
-
-export X509_CERT_DIR=/etc/grid-security/certificates
-export X509_USER_CERT=~/.globus/usercert.pem
-export X509_USER_KEY=~/.globus/userkey.pem
-export X509_USER_PROXY=/tmp/x509up_u500
-
-# Load openstask testing creds
-if [[ -f ~/scripts/creds ]]; then
-        source ~/scripts/creds
-fi
-
 # SCM @ IN2P3
 export SVN_SSH=ssh
-
-# Lauch screen
-if [[ `hostname` == "vinc" ]]; then
-	screen -r irc
-fi
 
 # Aliases
 alias h=' search_history'
@@ -46,11 +23,9 @@ alias setcl='export CLASSPATH=.:$CLASSPATH'
 alias setdp='export DISPLAY=":0"'
 alias rgrep='grep -R'
 alias vi='vim'
-#alias nocom="egrep -v '^#|^$'"
 alias nocom="sed -r '/^(\s*#|$)/d;'"
-alias gowork="cd ~/Documents/openstack && source admin-creds"
 alias os="openstack"
-alias osi="openstack --insecure"
+alias a2dp="/opt/pylover_a2dp/a2dp.py 00:18:09:93:A5:1A"
 
 # debian
 alias acs='apt-cache search'
@@ -65,6 +40,7 @@ alias agrmp='sudo apt-get remove --purge'
 alias ag='sudo apt-get'
 alias acs='aptitude search'
 alias acp='apt-cache policy'
+alias agarc='sudo apt-get autoremove && sudo apt-get clean'
 
 # redhat/centos
 alias yu='sudo yum update'
