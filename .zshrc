@@ -40,9 +40,7 @@ alias agrm='sudo apt-get remove'
 alias agrmp='sudo apt-get remove --purge'
 alias ag='sudo apt-get'
 alias acp='apt-cache policy'
-<<<<<<< HEAD
 alias agarc='sudo apt-get autoremove && sudo apt-get clean'
-=======
 alias agar='sudo apt-get autoremove'
 alias agc='sudo apt-get clean'
 
