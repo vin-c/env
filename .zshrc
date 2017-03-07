@@ -4,8 +4,8 @@
 source ~/.zshrc.oh-my-zsh
 READNULLCMD=${PAGER:-/usr/bin/pager}
 
-# SCM @ IN2P3
-export SVN_SSH=ssh
+# Add Puppet in PATH
+export PATH=$PATH:/opt/puppetlabs/bin
 
 # Aliases
 alias h=' search_history'
@@ -28,7 +28,8 @@ alias os="openstack"
 alias a2dp="/opt/pylover_a2dp/a2dp.py 00:18:09:93:A5:1A"
 
 # debian
-alias acs='apt-cache search'
+#alias acs='apt-cache search'
+alias acs='aptitude search'
 alias acss='apt-cache show'
 alias ags='apt-get source'
 alias agU='sudo apt-get update'
@@ -38,9 +39,12 @@ alias agi='sudo apt-get install'
 alias agrm='sudo apt-get remove'
 alias agrmp='sudo apt-get remove --purge'
 alias ag='sudo apt-get'
-alias acs='aptitude search'
 alias acp='apt-cache policy'
+<<<<<<< HEAD
 alias agarc='sudo apt-get autoremove && sudo apt-get clean'
+=======
+alias agar='sudo apt-get autoremove'
+alias agc='sudo apt-get clean'
 
 # redhat/centos
 alias yu='sudo yum update'
@@ -52,9 +56,11 @@ alias ss='sudo systemctl status'
 alias sdr='sudo systemctl daemon-reload'
 
 # docker
-alias do='docker'
-alias dops='docker ps -a'
-alias dorm='docker rm'
+if [[ -e /usr/bin/docker ]]; then
+   alias do='docker'
+   alias dops='docker ps -a'
+   alias dorm='docker rm'
+fi
 
 # Global ZSH
 [ -x "/usr/bin/most" ] && export PAGER=most
