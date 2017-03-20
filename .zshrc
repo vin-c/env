@@ -26,6 +26,7 @@ alias vi='vim'
 alias nocom="sed -r '/^(\s*#|$)/d;'"
 alias os="openstack"
 alias a2dp="/opt/pylover_a2dp/a2dp.py 00:18:09:93:A5:1A"
+alias a2dp_black="/opt/pylover_a2dp/a2dp.py FC:A8:9A:F0:CC:F2"
 
 # debian
 #alias acs='apt-cache search'
