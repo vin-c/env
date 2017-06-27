@@ -27,6 +27,7 @@ alias nocom="sed -r '/^(\s*#|$)/d;'"
 alias os="openstack"
 alias a2dp="/opt/pylover_a2dp/a2dp.py 00:18:09:93:A5:1A"
 alias a2dp_black="/opt/pylover_a2dp/a2dp.py FC:A8:9A:F0:CC:F2"
+alias myjohn="/home/vinc/Public/ldap-check-pwd/john-1.8.0-jumbo-1/run/john"
 
 # debian
 #alias acs='apt-cache search'
