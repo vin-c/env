@@ -18,7 +18,7 @@ for file in .gitconfig .gitignore-global .gitmodules .screenrc .vimrc \
 done
 
 if [[ ! -e /bin/zsh ]]; then
-   apt-get install -y zsh vim atool screen
+   sudo apt-get install -y zsh vim atool screen
 fi
 
 chsh -s /bin/zsh
