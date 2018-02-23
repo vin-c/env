@@ -45,6 +45,7 @@ alias acp='apt-cache policy'
 alias agarc='sudo apt-get autoremove && sudo apt-get clean'
 alias agar='sudo apt-get autoremove'
 alias agc='sudo apt-get clean'
+alias szs='sudo -H -s zsh -c '\''cd && screen -RRDD'\'
 
 # redhat/centos
 alias yu='sudo yum update'
@@ -171,3 +172,9 @@ case $TERM in
 esac
 
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+
+# To include keyring with zsh ?
+if [ -n "$DESKTOP_SESSION" ];then
+    eval $(gnome-keyring-daemon --start)
+    export SSH_AUTH_SOCK
+fi
