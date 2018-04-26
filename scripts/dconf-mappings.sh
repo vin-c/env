@@ -1,8 +1,23 @@
 #!/bin/bash
 
+dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-1 "['<Super>ampersand']"
+dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-2 "['<Super>eacute']"
+dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-3 "['<Super>quotedbl']"
+dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-4 "['<Super>apostrophe']"
 dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-5 "['<Super>parenleft']"
 dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-6 "['<Super>minus']"      
 dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-7 "['<Super>egrave']"
 dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-8 "['<Super>underscore']" 
 dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-9 "['<Super>ccedilla']"       
 dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-10 "['<Super>agrave']"  
+
+dconf write /org/gnome/desktop/wm/keybindings/move-to-workspace-1 "['<Alt><Super>ampersand']"
+dconf write /org/gnome/desktop/wm/keybindings/move-to-workspace-2 "['<Alt><Super>eacute']"
+dconf write /org/gnome/desktop/wm/keybindings/move-to-workspace-3 "['<Alt><Super>quotedbl']"
+dconf write /org/gnome/desktop/wm/keybindings/move-to-workspace-4 "['<Alt><Super>apostrophe']"
+dconf write /org/gnome/desktop/wm/keybindings/move-to-workspace-5 "['<Alt><Super>parenleft']"
+dconf write /org/gnome/desktop/wm/keybindings/move-to-workspace-6 "['<Alt><Super>minus']"      
+dconf write /org/gnome/desktop/wm/keybindings/move-to-workspace-7 "['<Alt><Super>egrave']"
+dconf write /org/gnome/desktop/wm/keybindings/move-to-workspace-8 "['<Alt><Super>underscore']" 
+dconf write /org/gnome/desktop/wm/keybindings/move-to-workspace-9 "['<Alt><Super>ccedilla']"       
+dconf write /org/gnome/desktop/wm/keybindings/move-to-workspace-10 "['<Alt><Super>agrave']"  
