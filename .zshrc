@@ -28,7 +28,7 @@ alias os="openstack"
 alias a2dp="/opt/pylover_a2dp/a2dp.py 00:18:09:93:A5:1A"
 alias a2dp_black="/opt/pylover_a2dp/a2dp.py FC:A8:9A:F0:CC:F2"
 alias myjohn="/home/vinc/Public/ldap-check-pwd/john/run/john"
-
+alias glogb="git log --oneline --graph --decorate --branches"
 # debian
 #alias acs='apt-cache search'
 alias acs='aptitude search'
@@ -58,7 +58,7 @@ alias sdr='sudo systemctl daemon-reload'
 
 # docker
 if [[ -e /usr/bin/docker ]]; then
-   alias do='docker'
+   alias dok='docker'
    alias dops='docker ps -a'
    alias dorm='docker rm'
 fi

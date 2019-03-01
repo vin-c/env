@@ -1,19 +1,22 @@
 [user]
-    name = Vincent Gatignol
-	email = vincent.gatignol@ipleanware.com
+   name = Vincent Gatignol
+   email = vincent.gatignol@braincube.com
 [help]
-    autocorrect = 1
+   autocorrect = 1
 [core]
-    autocrlf = input
-	excludesfile = /home/vinc/.gitignore-global
+   autocrlf = input
+   excludesfile = /home/vinc/.gitignore-global
 [alias]
-	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+   lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+   lga = log --color --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 [push]
-	default = simple
+   default = simple
 [color]
-	ui = true
+   ui = true
 [oh-my-zsh]
-    hide-dirty = 1
-    hide-status = 0
+   hide-dirty = 1
+   hide-status = 0
 [diff]
-	ignoreSubmodules = all
+   ignoreSubmodules = dirty 
+[status]
+   submoduleSummary = false
