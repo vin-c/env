@@ -41,3 +41,7 @@
 ehthumbs.db
 Thumbs.db
 *.swp
+
+# Custom #
+##########
+local_pki/
