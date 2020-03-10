@@ -30,6 +30,7 @@ alias a2dp_black="/opt/pylover_a2dp/a2dp.py FC:A8:9A:F0:CC:F2"
 alias myjohn="/home/vinc/Public/ldap-check-pwd/john/run/john"
 alias glogb='git log --oneline --graph --decorate --branches --abbrev-commit'
 alias gpr='git pull --rebase'
+alias grpo='git remote prune origin'
 #alias gloga='git log --all --oneline --graph --decorate --format="%h %<(90,trunc)%s"'
 # debian
 #alias acs='apt-cache search'

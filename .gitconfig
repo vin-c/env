@@ -20,3 +20,7 @@
    ignoreSubmodules = dirty 
 [status]
    submoduleSummary = false
+[pull]
+	rebase = true
+[rebase]
+	autoStash = true
