@@ -64,6 +64,10 @@ if [[ -e /usr/bin/docker ]]; then
    alias dok='docker'
    alias dops='docker ps -a'
    alias dorm='docker rm'
+   alias doip='docker image prune'
+   alias db='docker build -t local_build:latest .'
+   alias dr='docker run --rm -t -d --name plop local_build:latest && docker exec -it plop /bin/bash ; docker stop plop'
+   alias drp='docker run --rm --privileged -t -d --name plop local_build:latest && docker exec -it plop /bin/bash ; docker stop plop'
 fi
 
 # Dell OpenManage
