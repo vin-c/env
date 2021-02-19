@@ -37,17 +37,17 @@ alias grpo='git remote prune origin'
 alias acs='aptitude search'
 alias acss='apt-cache show'
 alias ags='apt-get source'
-alias agU='sudo apt-get update'
-alias agu='sudo apt-get upgrade'
-alias agdu='sudo apt-get dist-upgrade'
-alias agi='sudo apt-get install'
-alias agrm='sudo apt-get remove'
-alias agrmp='sudo apt-get remove --purge'
-alias ag='sudo apt-get'
-alias acp='apt-cache policy'
-alias agarc='sudo apt-get autoremove && sudo apt-get clean'
-alias agar='sudo apt-get autoremove'
-alias agc='sudo apt-get clean'
+alias agU='sudo apt update'
+alias agu='sudo apt upgrade'
+alias agdu='sudo apt dist-upgrade'
+alias agi='sudo apt install'
+alias agrm='sudo apt remove'
+alias agrmp='sudo apt remove --purge'
+alias ag='sudo apt'
+alias acp='apt policy'
+alias agarc='sudo apt autoremove && sudo apt clean'
+alias agar='sudo apt autoremove'
+alias agc='sudo apt clean'
 alias szs='sudo -H -s zsh -c '\''cd && screen -RRDD'\'
 
 # redhat/centos
@@ -72,6 +72,12 @@ fi
 
 # Dell OpenManage
 alias racadm='sudo /opt/dell/srvadmin/sbin/racadm'
+
+# Braincube
+alias gopp='cd ~/Public/infra/environments/env_preprod'
+alias goblue='cd ~/Public/infra/environments/env_blue'
+alias gocloud='cd ~/Public/infra/environments/env_cloud'
+alias goansible='cd ~/Public/infra/ansible'
 
 # Global ZSH
 [ -x "/usr/bin/most" ] && export PAGER=most
@@ -185,3 +191,9 @@ if [ -n "$DESKTOP_SESSION" ];then
     eval $(gnome-keyring-daemon --start)
     export SSH_AUTH_SOCK
 fi
+
+# python virtualenvs (for ansible)
+export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+export WORKON_HOME=~/Public/venvs/
+source /usr/local/bin/virtualenvwrapper.sh
+workon ansible2.9.7
