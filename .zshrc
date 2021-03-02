@@ -48,7 +48,7 @@ alias acp='apt policy'
 alias agarc='sudo apt autoremove && sudo apt clean'
 alias agar='sudo apt autoremove'
 alias agc='sudo apt clean'
-alias szs='sudo -H -s zsh -c '\''cd && screen -RRDD'\'
+alias szs='sudo -H -s zsh -c '\''screen -x || cd && screen'\'
 
 # redhat/centos
 alias yu='sudo yum update'
