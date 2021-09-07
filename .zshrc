@@ -61,23 +61,30 @@ alias sdr='sudo systemctl daemon-reload'
 
 # docker
 if [[ -e /usr/bin/docker ]]; then
-   alias dok='docker'
-   alias dops='docker ps -a'
-   alias dorm='docker rm'
-   alias doip='docker image prune'
-   alias db='docker build -t local_build:latest .'
-   alias dr='docker run --rm -t -d --name plop local_build:latest && docker exec -it plop /bin/bash ; docker stop plop'
-   alias drp='docker run --rm --privileged -t -d --name plop local_build:latest && docker exec -it plop /bin/bash ; docker stop plop'
+  alias dok='docker'
+  alias dops='docker ps -a'
+  alias dorm='docker rm'
+  alias doip='docker image prune'
+  alias db='docker build -t local_build:latest .'
+  alias dr='docker run --rm -t -d --name plop local_build:latest && docker exec -it plop /bin/bash ; docker stop plop'
+  alias drp='docker run --rm --privileged -t -d --name plop local_build:latest && docker exec -it plop /bin/bash ; docker stop plop'
+  alias dc='docker-compose'
 fi
 
 # Dell OpenManage
 alias racadm='sudo /opt/dell/srvadmin/sbin/racadm'
 
 # Braincube
-alias gopp='cd ~/Public/infra/environments/env_preprod'
-alias goblue='cd ~/Public/infra/environments/env_blue'
-alias gocloud='cd ~/Public/infra/environments/env_cloud'
-alias goansible='cd ~/Public/infra/ansible'
+alias gopp='cd ~/Public/infra/environments/env_preprod ; workon ansible2.9.17'
+alias godev='cd ~/Public/infra/environments/env_dev ; workon ansible2.9.17'
+alias gonet='cd ~/Public/infra/environments/network_stack ; workon ansible2.10'
+alias goblue='cd ~/Public/infra/environments/env_blue ; workon ansible2.9.7'
+alias gocloud='cd ~/Public/infra/environments/env_cloud ; workon ansible2.9.7'
+alias goansible='cd ~/Public/infra/ansible ; workon ansible2.9.7'
+alias mklink="rm -rf ansible && ln -s ../ansible ."
+alias ap='ansible-playbook -v --diff --vault-password-file .vault_pass'
+alias apc='ansible-playbook -v --diff --vault-password-file .vault_pass -i inventory/core.sh ansible/playbook/v1.yml'
+alias apa='ansible-playbook -v --diff --vault-password-file .vault_pass -i inventory/all.sh ansible/playbook/v1.yml'
 
 # Global ZSH
 [ -x "/usr/bin/most" ] && export PAGER=most
@@ -139,6 +146,46 @@ ax () {
 	rm -rf $TMP
 }
 
+sshp () {
+	if [ $# -eq 0 ]; then echo 'Gimme a host to connect to !'; return; fi
+  host="${1}"
+  shift
+  domain="test.mybraincube.com"
+  resolver="10.84.20.1"
+  ip=$(dig ${host}.${domain} +short +answer @${resolver})
+  ssh -F ~/.ssh/braincube.config -o HostName=${ip} ${@} ${host}.${domain}
+}
+
+sshc () {
+	if [ $# -eq 0 ]; then echo 'Gimme a host to connect to !'; return; fi
+  host=${1}
+  shift
+  domain="mybraincube.com"
+  resolver="10.80.1.2"
+  ip=$(dig ${host}.${domain} +short +answer @${resolver})
+  ssh -F ~/.ssh/braincube.config -o HostName=${ip} ${@} ${host}.${domain}
+}
+
+sshb () {
+	if [ $# -eq 0 ]; then echo 'Gimme a host to connect to !'; return; fi
+  host="${1}"
+  shift
+  domain="blu-e.fr"
+  resolver="10.84.240.1"
+  ip=$(dig ${host}.${domain} +short +answer @${resolver})
+  ssh -F ~/.ssh/braincube.config -o HostName=${ip} ${@} ${host}.${domain}
+}
+
+sshg () {
+	if [ $# -eq 0 ]; then echo 'Gimme a host to connect to !'; return; fi
+  host=${1}
+  shift
+  domain="goodyear.mybraincube.com"
+  resolver="10.80.1.12"
+  ip=$(dig ${host}.${domain} +short +answer @${resolver})
+  ssh -F ~/.ssh/braincube.config -o HostName=${ip} ${@} ${host}.${domain}
+}
+
 # prompt
 if [ $UID -eq 0 ]; then NCOLOR="red"; else NCOLOR="white"; fi
 RCOLOR="%(?.$fg[black]$bg[green].$fg[grey]$bg[red])"
@@ -187,7 +234,7 @@ esac
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 
 # To include keyring with zsh ?
-if [ -n "$DESKTOP_SESSION" ];then
+if [ -n "$DESKTOP_SESSION" ]; then
     eval $(gnome-keyring-daemon --start)
     export SSH_AUTH_SOCK
 fi
