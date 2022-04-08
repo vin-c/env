@@ -44,4 +44,6 @@ Thumbs.db
 
 # Custom #
 ##########
+ansible.cfg
 local_pki/
+SSO_API_KEY_AWX

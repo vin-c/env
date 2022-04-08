@@ -2,10 +2,15 @@
 
 # Oh-my-zsh
 source ~/.zshrc.oh-my-zsh
-READNULLCMD=${PAGER:-/usr/bin/pager}
 
-# Add Puppet in PATH
-export PATH=$PATH:/opt/puppetlabs/bin
+# Global ZSH
+[ -x "/usr/bin/most" ] && export PAGER=most
+SAVEHIST=40000
+HISTSIZE=40000
+HISTFILE=$HOME/.history
+
+# Use modern completion system
+READNULLCMD=${PAGER:-/usr/bin/pager}
 
 # Aliases
 alias h=' search_history'
@@ -19,14 +24,10 @@ alias psx='ps aux | $PAGER'
 alias ls='ls $LS_OPTIONS -F'
 alias lart='ls -lart'
 #alias ll='ls $LS_OPTIONS -laFh'
-alias setcl='export CLASSPATH=.:$CLASSPATH'
-alias setdp='export DISPLAY=":0"'
 alias rgrep='grep -R'
 alias vi='vim'
 alias nocom="sed -r '/^(\s*#|$)/d;'"
 alias os="openstack"
-alias a2dp="/opt/pylover_a2dp/a2dp.py 00:18:09:93:A5:1A"
-alias a2dp_black="/opt/pylover_a2dp/a2dp.py FC:A8:9A:F0:CC:F2"
 alias myjohn="/home/vinc/Public/ldap-check-pwd/john/run/john"
 alias glogb='git log --oneline --graph --decorate --branches --abbrev-commit'
 alias gpr='git pull --rebase'
@@ -43,7 +44,6 @@ alias agdu='sudo apt dist-upgrade'
 alias agi='sudo apt install'
 alias agrm='sudo apt remove'
 alias agrmp='sudo apt remove --purge'
-alias ag='sudo apt'
 alias acp='apt policy'
 alias agarc='sudo apt autoremove && sudo apt clean'
 alias agar='sudo apt autoremove'
@@ -75,24 +75,25 @@ fi
 alias racadm='sudo /opt/dell/srvadmin/sbin/racadm'
 
 # Braincube
-alias gopp='cd ~/Public/infra/environments/env_preprod ; workon ansible2.9.17'
-alias godev='cd ~/Public/infra/environments/env_dev ; workon ansible2.9.17'
-alias gonet='cd ~/Public/infra/environments/network_stack ; workon ansible2.10'
-alias goblue='cd ~/Public/infra/environments/env_blue ; workon ansible2.9.7'
-alias gocloud='cd ~/Public/infra/environments/env_cloud ; workon ansible2.9.7'
-alias goansible='cd ~/Public/infra/ansible ; workon ansible2.9.7'
+alias gopp='cd ~/Public/infra/environments/env_preprod ; export SSO_API_KEY=$(cat SSO_API_KEY_AWX) ; workon ansible_2.9.x'
+alias godev='cd ~/Public/infra/environments/env_dev ; workon ansible_2.9.x'
+alias gocorbion='cd ~/Public/infra/environments/env_corbion ; export SSO_API_KEY=$(cat SSO_API_KEY_AWX) ; workon ansible_2.9.x'
+alias gonet='cd ~/Public/infra/environments/network_stack ; export SSO_API_KEY=$(cat SSO_API_KEY_AWX) ; workon ansible2.10'
+alias goblue='cd ~/Public/infra/environments/env_blue ; export SSO_API_KEY=$(cat SSO_API_KEY_AWX) ; workon ansible_2.9.x'
+alias golab='cd ~/Public/infra/environments/env_lab ; export SSO_API_KEY=$(cat SSO_API_KEY_AWX) ; workon ansible_2.9.x'
+alias golab1='cd ~/Public/infra/environments/env_lab_blade_1 ; export SSO_API_KEY=$(cat SSO_API_KEY_AWX) ; workon ansible_2.9.x'
+alias golab2='cd ~/Public/infra/environments/env_lab_blade_2 ; export SSO_API_KEY=$(cat SSO_API_KEY_AWX) ; workon ansible_2.9.x'
+alias golab3='cd ~/Public/infra/environments/env_lab_blade_3 ; export SSO_API_KEY=$(cat SSO_API_KEY_AWX) ; workon ansible_2.9.x'
+alias gogy='cd ~/Public/infra/environments/env_gyazure ; export SSO_API_KEY=$(cat SSO_API_KEY_AWX) ; workon ansible_2.9.x'
+alias gocloud='cd ~/Public/infra/environments/env_cloud ; export SSO_API_KEY=$(cat SSO_API_KEY_AWX) ; workon ansible_2.9.x'
+alias goansible='cd ~/Public/infra/ansible ; workon ansible_2.9.x'
+alias goz='cd ~/Public/zimbra ; workon ansible_latest'
 alias mklink="rm -rf ansible && ln -s ../ansible ."
 alias ap='ansible-playbook -v --diff --vault-password-file .vault_pass'
 alias apc='ansible-playbook -v --diff --vault-password-file .vault_pass -i inventory/core.sh ansible/playbook/v1.yml'
 alias apa='ansible-playbook -v --diff --vault-password-file .vault_pass -i inventory/all.sh ansible/playbook/v1.yml'
 
-# Global ZSH
-[ -x "/usr/bin/most" ] && export PAGER=most
-SAVEHIST=40000
-HISTSIZE=40000
-HISTFILE=$HOME/.history
-
-# Use modern completion system
+# Custom
 autoload -Uz compinit
 compinit -u
 
@@ -189,7 +190,7 @@ sshg () {
 # prompt
 if [ $UID -eq 0 ]; then NCOLOR="red"; else NCOLOR="white"; fi
 RCOLOR="%(?.$fg[black]$bg[green].$fg[grey]$bg[red])"
-PROMPT='%{$fg[$NCOLOR]%}%B%n%b%{$reset_color%}:%{$fg[blue]%}%B%c/%b%{$reset_color%} $(git_prompt_info)%{$RCOLOR%}%(!.#.$)%{$reset_color%} '
+#PROMPT='%{$fg[$NCOLOR]%}%B%n%b%{$reset_color%}:%{$fg[blue]%}%B%c/%b%{$reset_color%} $(git_prompt_info)%{$RCOLOR%}%(!.#.$)%{$reset_color%} '
 
 search_history() { fc -l -20000 | grep --color=always "$@" }
 mf() { tbl $* | nroff -mandoc | $PAGER -s }
@@ -243,4 +244,7 @@ fi
 export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
 export WORKON_HOME=~/Public/venvs/
 source /usr/local/bin/virtualenvwrapper.sh
-workon ansible2.9.7
+#workon ansible_2.9.x
+
+alias share='ffplay -video_size 1920x1020 -framerate 25 -f x11grab -i :1.0+1600,27'
+alias sharecam='ffmpeg -f x11grab -r 20 -s 1920x1020 -i :1.0+1600,27 -vcodec rawvideo -vf hflip -pix_fmt yuv420p -threads 0 -f v4l2 /dev/video7'
