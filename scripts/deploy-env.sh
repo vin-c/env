@@ -20,7 +20,7 @@ for file in .gitconfig .gitignore-global .gitmodules .screenrc .tmux.conf .vimrc
 done
 
 if [[ ! -e /bin/zsh ]]; then
-   sudo apt install -y zsh vim atool screen tmux
+   sudo apt install -y zsh vim atool screen tmux terminator keepassxc seafile-client
 fi
 
 chsh -s /bin/zsh
@@ -31,6 +31,6 @@ if [[ -e /bin/zsh ]]; then
 fi
 
 mkdir -p ${home}/.config/systemd/user/
-cp ${home}/env/ssh-agent.service ${home}/.config/systemd/user/ssh-agent.service
+cp ${home}/env/conf/ssh-agent.service ${home}/.config/systemd/user/ssh-agent.service
 systemctl --user daemon-reload
 systemctl --user enable ssh-agent.service
