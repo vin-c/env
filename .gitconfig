@@ -1,6 +1,6 @@
 [user]
 	name = Vincent Gatignol
-	email = vincent.gatignol@braincube.com
+	email = vincent.gatignoljamon@ipsosante.fr
 [help]
   autocorrect = 1
 [core]
@@ -24,3 +24,8 @@
 	rebase = true
 [rebase]
 	autoStash = true
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process

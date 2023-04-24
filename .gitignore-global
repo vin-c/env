@@ -41,9 +41,9 @@
 ehthumbs.db
 Thumbs.db
 *.swp
+*.pyc
 
 # Custom #
 ##########
 ansible.cfg
-local_pki/
-SSO_API_KEY_AWX
+extra/

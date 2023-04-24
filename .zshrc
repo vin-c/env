@@ -1,5 +1,3 @@
-# Created by vinc
-
 # Oh-my-zsh
 source ~/.zshrc.oh-my-zsh
 
@@ -134,7 +132,7 @@ MAIL=/var/spool/mail/$USERNAME
 
 export HISTORY SAVEHIST HISTFILE HISTSIZE MAIL
 export EDITOR=vi
-
+export CORRECT_IGNORE_FILE='.ssh'
 # functions
 ax () {
 	if [ $# -eq 0 ]; then echo 'Gimme a file to unpack !'; return; fi
@@ -236,15 +234,15 @@ export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 
 # To include keyring with zsh ?
 if [ -n "$DESKTOP_SESSION" ]; then
-    eval $(gnome-keyring-daemon --start)
-    export SSH_AUTH_SOCK
+   export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR"/ssh-agent.socket
 fi
 
 # python virtualenvs (for ansible)
 export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-export WORKON_HOME=~/Public/venvs/
-source /usr/local/bin/virtualenvwrapper.sh
-#workon ansible_2.9.x
+export WORKON_HOME=~/.local/venvs
+source ~/env/scripts/virtualenvwrapper.sh
+source ~/env/scripts/teleport_autocompletion.sh
 
 alias share='ffplay -video_size 1920x1020 -framerate 25 -f x11grab -i :1.0+1600,27'
 alias sharecam='ffmpeg -f x11grab -r 20 -s 1920x1020 -i :1.0+1600,27 -vcodec rawvideo -vf hflip -pix_fmt yuv420p -threads 0 -f v4l2 /dev/video7'
+alias gow='cd ~/Documents/ipso/ ; workon ansible'
