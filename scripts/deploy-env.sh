@@ -3,7 +3,7 @@
 home=~
 cd ${home}/env
 
-sudo apt install -y git virtualenv virtualenvwrapper
+sudo apt install -y git virtualenv virtualenvwrapper zsh vim atool screen tmux terminator keepassxc seafile-gui firefox-esr powerline
 
 git submodule init && git submodule update
 
@@ -19,9 +19,8 @@ for file in .gitconfig .gitignore-global .gitmodules .screenrc .tmux.conf .vimrc
    ln -s ${home}/env/${file} ${home}/${file}
 done
 
-if [[ ! -e /bin/zsh ]]; then
-   sudo apt install -y zsh vim atool screen tmux terminator keepassxc seafile-client
-fi
+mkdir ${home}/.config/terminator
+sudo cp conf/terminator.config ${home}/.config/terminator/config
 
 chsh -s /bin/zsh
 /bin/zsh
