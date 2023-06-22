@@ -22,6 +22,9 @@ done
 mkdir ${home}/.config/terminator
 sudo cp conf/terminator.config ${home}/.config/terminator/config
 
+mkdir ${home}/.docker
+sudo cp conf/docker_config.json ${home}/.docker/config.json
+
 chsh -s /bin/zsh
 /bin/zsh
 

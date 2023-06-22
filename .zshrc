@@ -33,7 +33,7 @@ alias grpo='git remote prune origin'
 #alias gloga='git log --all --oneline --graph --decorate --format="%h %<(90,trunc)%s"'
 # debian
 #alias acs='apt-cache search'
-alias acs='aptitude search'
+alias acs='apt search'
 alias acss='apt-cache show'
 alias ags='apt-get source'
 alias agU='sudo apt update'
@@ -246,3 +246,4 @@ source ~/env/scripts/teleport_autocompletion.sh
 alias share='ffplay -video_size 1920x1020 -framerate 25 -f x11grab -i :1.0+1600,27'
 alias sharecam='ffmpeg -f x11grab -r 20 -s 1920x1020 -i :1.0+1600,27 -vcodec rawvideo -vf hflip -pix_fmt yuv420p -threads 0 -f v4l2 /dev/video7'
 alias gow='cd ~/Documents/ipso/ ; workon ansible'
+alias gowebsite='cd ~/Documents/ipso/website ; workon django'
