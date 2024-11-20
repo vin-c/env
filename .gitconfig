@@ -1,6 +1,7 @@
 [user]
 	name = Vincent Gatignol
-	email = dev@gatignol.fr
+	email = vincent.gatignol-jamon@enalean.com
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMd8l3hTcfZ2PJ//kO7auYjaFIBhKWLzORkbJvzr3PKJ
 [help]
   autocorrect = 1
 [core]
@@ -29,3 +30,9 @@
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	program = /opt/1Password/op-ssh-sign
+[commit]
+	gpgsign = true

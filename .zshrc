@@ -3,9 +3,9 @@ source ~/.zshrc.oh-my-zsh
 
 # Global ZSH
 [ -x "/usr/bin/most" ] && export PAGER=most
-SAVEHIST=40000
-HISTSIZE=40000
-HISTFILE=$HOME/.history
+SAVEHIST=90000
+HISTSIZE=90000
+HISTFILE=$HOME/.zsh_history
 
 # Use modern completion system
 READNULLCMD=${PAGER:-/usr/bin/pager}
@@ -18,6 +18,7 @@ alias cp='cp -i'
 alias mv='mv -i'
 alias rm=' rm -i'
 alias c=clear
+alias code=codium
 alias psx='ps aux | $PAGER'
 alias ls='ls $LS_OPTIONS -F'
 alias lart='ls -lart'
@@ -49,10 +50,10 @@ alias agc='sudo apt clean'
 alias szs='sudo -H -s zsh -c '\''screen -x || cd && screen'\'
 
 # redhat/centos
-alias yu='sudo yum update'
-alias yi='sudo yum install'
-alias ys='yum search'
-alias yv='yum info'
+alias yu='sudo dnf update'
+alias yi='sudo dnf install'
+alias ys='dnf search'
+alias yv='dnf info'
 alias sr='sudo systemctl restart'
 alias ss='sudo systemctl status'
 alias sdr='sudo systemctl daemon-reload'
@@ -68,28 +69,6 @@ if [[ -e /usr/bin/docker ]]; then
   alias drp='docker run --rm --privileged -t -d --name plop local_build:latest && docker exec -it plop /bin/bash ; docker stop plop'
   alias dc='docker-compose'
 fi
-
-# Dell OpenManage
-alias racadm='sudo /opt/dell/srvadmin/sbin/racadm'
-
-# Braincube
-alias gopp='cd ~/Public/infra/environments/env_preprod ; export SSO_API_KEY=$(cat SSO_API_KEY_AWX) ; workon ansible_2.9.x'
-alias godev='cd ~/Public/infra/environments/env_dev ; workon ansible_2.9.x'
-alias gocorbion='cd ~/Public/infra/environments/env_corbion ; export SSO_API_KEY=$(cat SSO_API_KEY_AWX) ; workon ansible_2.9.x'
-alias gonet='cd ~/Public/infra/environments/network_stack ; export SSO_API_KEY=$(cat SSO_API_KEY_AWX) ; workon ansible2.10'
-alias goblue='cd ~/Public/infra/environments/env_blue ; export SSO_API_KEY=$(cat SSO_API_KEY_AWX) ; workon ansible_2.9.x'
-alias golab='cd ~/Public/infra/environments/env_lab ; export SSO_API_KEY=$(cat SSO_API_KEY_AWX) ; workon ansible_2.9.x'
-alias golab1='cd ~/Public/infra/environments/env_lab_blade_1 ; export SSO_API_KEY=$(cat SSO_API_KEY_AWX) ; workon ansible_2.9.x'
-alias golab2='cd ~/Public/infra/environments/env_lab_blade_2 ; export SSO_API_KEY=$(cat SSO_API_KEY_AWX) ; workon ansible_2.9.x'
-alias golab3='cd ~/Public/infra/environments/env_lab_blade_3 ; export SSO_API_KEY=$(cat SSO_API_KEY_AWX) ; workon ansible_2.9.x'
-alias gogy='cd ~/Public/infra/environments/env_gyazure ; export SSO_API_KEY=$(cat SSO_API_KEY_AWX) ; workon ansible_2.9.x'
-alias gocloud='cd ~/Public/infra/environments/env_cloud ; export SSO_API_KEY=$(cat SSO_API_KEY_AWX) ; workon ansible_2.9.x'
-alias goansible='cd ~/Public/infra/ansible ; workon ansible_2.9.x'
-alias goz='cd ~/Public/zimbra ; workon ansible_latest'
-alias mklink="rm -rf ansible && ln -s ../ansible ."
-alias ap='ansible-playbook -v --diff --vault-password-file .vault_pass'
-alias apc='ansible-playbook -v --diff --vault-password-file .vault_pass -i inventory/core.sh ansible/playbook/v1.yml'
-alias apa='ansible-playbook -v --diff --vault-password-file .vault_pass -i inventory/all.sh ansible/playbook/v1.yml'
 
 # Custom
 autoload -Uz compinit
@@ -133,6 +112,7 @@ MAIL=/var/spool/mail/$USERNAME
 export HISTORY SAVEHIST HISTFILE HISTSIZE MAIL
 export EDITOR=vi
 export CORRECT_IGNORE_FILE='.ssh'
+
 # functions
 ax () {
 	if [ $# -eq 0 ]; then echo 'Gimme a file to unpack !'; return; fi
@@ -143,46 +123,6 @@ ax () {
 	DIR="`cat $TMP`"
 	[ "$DIR" != "" -a -d "$DIR" ] && cd "$DIR"
 	rm -rf $TMP
-}
-
-sshp () {
-	if [ $# -eq 0 ]; then echo 'Gimme a host to connect to !'; return; fi
-  host="${1}"
-  shift
-  domain="test.mybraincube.com"
-  resolver="10.84.20.1"
-  ip=$(dig ${host}.${domain} +short +answer @${resolver})
-  ssh -F ~/.ssh/braincube.config -o HostName=${ip} ${@} ${host}.${domain}
-}
-
-sshc () {
-	if [ $# -eq 0 ]; then echo 'Gimme a host to connect to !'; return; fi
-  host=${1}
-  shift
-  domain="mybraincube.com"
-  resolver="10.80.1.2"
-  ip=$(dig ${host}.${domain} +short +answer @${resolver})
-  ssh -F ~/.ssh/braincube.config -o HostName=${ip} ${@} ${host}.${domain}
-}
-
-sshb () {
-	if [ $# -eq 0 ]; then echo 'Gimme a host to connect to !'; return; fi
-  host="${1}"
-  shift
-  domain="blu-e.fr"
-  resolver="10.84.240.1"
-  ip=$(dig ${host}.${domain} +short +answer @${resolver})
-  ssh -F ~/.ssh/braincube.config -o HostName=${ip} ${@} ${host}.${domain}
-}
-
-sshg () {
-	if [ $# -eq 0 ]; then echo 'Gimme a host to connect to !'; return; fi
-  host=${1}
-  shift
-  domain="goodyear.mybraincube.com"
-  resolver="10.80.1.12"
-  ip=$(dig ${host}.${domain} +short +answer @${resolver})
-  ssh -F ~/.ssh/braincube.config -o HostName=${ip} ${@} ${host}.${domain}
 }
 
 # prompt
@@ -230,20 +170,25 @@ case $TERM in
         ;;
 esac
 
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+# Nix integration
+export PATH="$PATH:$HOME/.rvm/bin:$HOME/.nix-profile/bin:/nix/var/nix/profiles/default/bin:" # Add RVM to PATH for scripting
 
-# To include keyring with zsh ?
-if [ -n "$DESKTOP_SESSION" ]; then
-   export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR"/ssh-agent.socket
+eval "$(direnv hook zsh)"
+if [ -r "/etc/profile.d/nix.sh" ]; then
+   . /etc/profile.d/nix.sh
 fi
 
-# python virtualenvs (for ansible)
-export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-export WORKON_HOME=~/.local/venvs
-source ~/env/scripts/virtualenvwrapper.sh
-source ~/env/scripts/teleport_autocompletion.sh
+export ANSIBLE_BECOME_PASSWORD_FILE='extra/.sudo_passwd' ANSIBLE_REMOTE_USER='vincent.gatignol-jamon'
 
-alias share='ffplay -video_size 1920x1020 -framerate 25 -f x11grab -i :1.0+1600,27'
-alias sharecam='ffmpeg -f x11grab -r 20 -s 1920x1020 -i :1.0+1600,27 -vcodec rawvideo -vf hflip -pix_fmt yuv420p -threads 0 -f v4l2 /dev/video7'
-alias gow='cd ~/Documents/ipso/ ; workon ansible'
-alias gowebsite='cd ~/Documents/ipso/website ; workon django'
+# work env
+alias m=molecule
+alias setremote="export ANSIBLE_BECOME_PASSWORD_FILE='extra/.sudo_passwd' ANSIBLE_REMOTE_USER='vincent.gatignol-jamon'"
+alias unsetremote="unset ANSIBLE_BECOME_PASSWORD_FILE ANSIBLE_REMOTE_USER"
+
+alias mconverge='unsetremote && molecule converge -- -v --diff'
+alias mcreate='molecule create'
+alias mdestroy='molecule destroy'
+alias mtest='molecule test'
+alias mverify='molecule verify'
+alias tf=terraform
+alias vgssh='evssh -l ${ANSIBLE_REMOTE_USER}'

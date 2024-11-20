@@ -45,5 +45,8 @@ Thumbs.db
 
 # Custom #
 ##########
-ansible.cfg
 extra/
+tuleap/extra
+.vscode/
+.envrc
+current_dev/
