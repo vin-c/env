@@ -5,29 +5,131 @@
 
 {
   imports =
-    [ (modulesPath + "/profiles/qemu-guest.nix")
+    [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "ahci" "xhci_pci" "virtio_pci" "sr_mod" "virtio_blk" ];
+  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" "usbhid" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
+  boot.kernelParams = [
+    "nohibernate"
+    # Enable page allocator randomization
+    "page_alloc.shuffle=1"
+    # Don't merge slabs
+    "slab_nomerge"
+    # Disable debugfs
+    "debugfs=off"
+  ];
+
+  security.protectKernelImage = true;
+  boot.kernel.sysctl = {
+    # No need for Magic SysRq keys
+    "kernel.sysrq" = 0;
+    # Hide kptrs even for processes with CAP_SYSLOG
+    "kernel.kptr_restrict" = 2;
+    # Disable ftrace debugging
+    "kernel.ftrace_enabled" = false;
+    # Ignore broadcast ICMP (mitigate SMURF)
+    "net.ipv4.icmp_echo_ignore_broadcasts" = false;
+    # Ignore outgoing ICMP redirects
+    "net.ipv4.conf.all.send_redirects" = false;
+    "net.ipv4.conf.default.send_redirects" = false;
+    # Refuse ICMP redirects (MITM mitigations)
+    "net.ipv4.conf.all.accept_redirects" = false;
+    "net.ipv4.conf.default.accept_redirects" = false;
+    "net.ipv4.conf.all.secure_redirects" = false;
+    "net.ipv4.conf.default.secure_redirects" = false;
+    "net.ipv6.conf.all.accept_redirects" = false;
+    "net.ipv6.conf.default.accept_redirects" = false;
+    # Swap on zram optimization
+    "vm.page-cluster" = 0;
+    "vm.swappiness" = 180;
+    "vm.watermark_boost_factor" = 0;
+    "vm.watermark_scale_factor" = 125;
+  };
+
+  boot.blacklistedKernelModules = [
+    # Obscure network protocols
+    "ax25"
+    "netrom"
+    "rose"
+    # Old or rare or insufficiently audited filesystems
+    "adfs"
+    "affs"
+    "bfs"
+    "befs"
+    "cramfs"
+    "efs"
+    "erofs"
+    "exofs"
+    "freevxfs"
+    "f2fs"
+    "hfs"
+    "hpfs"
+    "jfs"
+    "minix"
+    "nilfs2"
+    "ntfs"
+    "omfs"
+    "qnx4"
+    "qnx6"
+    "sysv"
+    "ufs"
+  ];
+
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/6e998254-89e0-41a7-a7ad-e8e71fea892c";
+    { device = "/dev/disk/by-uuid/716ad5da-1279-4a70-982a-8760fad4b507";
       fsType = "ext4";
     };
 
-  boot.initrd.luks.devices."luks-cce6903b-91e9-4ca9-bbbd-ac41bfb58909".device = "/dev/disk/by-uuid/cce6903b-91e9-4ca9-bbbd-ac41bfb58909";
+  boot.initrd.luks.devices."luks-5feec690-474f-45c9-a640-12a34c8e4853".device = "/dev/disk/by-uuid/5feec690-474f-45c9-a640-12a34c8e4853";
+
+  fileSystems."/boot" =
+    { device = "/dev/disk/by-uuid/9235-8231";
+      fsType = "vfat";
+      options = [ "fmask=0077" "dmask=0077" ];
+    };
 
   swapDevices = [ ];
+  zramSwap.enable = true;
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
   # still possible to use this option, but it's recommended to use it in conjunction
   # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
   networking.useDHCP = lib.mkDefault true;
-  # networking.interfaces.enp8s0.useDHCP = lib.mkDefault true;
+  # networking.interfaces.enp1s0f0.useDHCP = lib.mkDefault true;
+  # networking.interfaces.wlp2s0.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware.enableRedistributableFirmware = true;
+  services.fwupd.enable = true;
+
+  # Enable sound with pipewire.
+  hardware.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    # If you want to use JACK applications, uncomment this
+    #jack.enable = true;
+
+    # use the example session manager (no others are packaged yet so this is enabled by default,
+    # no need to redefine it in your config for now)
+    #media-session.enable = true;
+  };
+
+  # Enable bluetooth
+  hardware.bluetooth = {
+    enable = true; # enables support for Bluetooth
+    # CVE-2023-45866
+    input.General.ClassicBondedOnly = true;
+    powerOnBoot = true; # powers up the default Bluetooth controller on boot
+  };
+  # services.blueman.enable = true;
 }

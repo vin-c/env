@@ -30,9 +30,9 @@
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
-[gpg]
-	format = ssh
-[gpg "ssh"]
-	program = /opt/1Password/op-ssh-sign
-[commit]
-	gpgsign = true
+# [gpg]
+# 	format = ssh
+# [gpg "ssh"]
+# 	program = /etc/profiles/per-user/vinc/bin/op-ssh-sign
+# [commit]
+# 	gpgsign = true
