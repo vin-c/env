@@ -3,9 +3,9 @@
 home=~
 cd ${home}/env
 
-sudo dnf install -y git virtualenv zsh vim atool tmux terminator powerline
+# sudo dnf install -y git virtualenv zsh vim atool tmux terminator powerline
 
-git submodule init && git submodule update
+# git submodule init && git submodule update
 
 for file in .gitconfig .gitignore-global .gitmodules .screenrc .tmux.conf .vimrc \
    .zshrc .zshrc.oh-my-zsh .oh-my-zsh .inputrc .bashrc ; do
@@ -22,9 +22,9 @@ done
 mkdir ~/.config/terminator
 ln -s conf/terminator.config ~/.config/terminator/config
 
-chsh -s /bin/zsh
-/bin/zsh
+# chsh -s /bin/zsh
+# /bin/zsh
 
-if [[ -e /bin/zsh ]]; then
-   source ${home}/.zshrc
-fi
+# if [[ -e /bin/zsh ]]; then
+#    source ${home}/.zshrc
+# fi
