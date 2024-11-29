@@ -29,6 +29,8 @@
     oh-my-zsh
     openssl
     php
+    plymouth
+    adi1090x-plymouth-themes
     powerline-fonts
     qemu_kvm
     tcpdump
@@ -37,6 +39,7 @@
     uutils-coreutils-noprefix
     virt-manager
     wget
+    zip
   ];
 
   programs = {

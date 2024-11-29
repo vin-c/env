@@ -50,3 +50,4 @@ tuleap/extra
 .vscode/
 .envrc
 current_dev/
+.direnv/
