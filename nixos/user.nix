@@ -17,6 +17,7 @@
       extraGroups = [ "networkmanager" "wheel" "docker" ];
       shell = pkgs.zsh;
       packages = with pkgs; [
+        dig
         vlc
         yubikey-manager-qt
         (vscode-with-extensions.override {
@@ -32,6 +33,7 @@
             bierner.emojisense
             redhat.ansible
             mhutchie.git-graph
+            RoweWilsonFrederiskHolme.wikitext
           ];
           # ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
           #   {
