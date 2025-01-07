@@ -8,56 +8,30 @@
   #   "displaylink"
   # ];
 
+  # Allow nix flakes
+  nix = {
+    package = pkgs.nixVersions.latest;
+    extraOptions = ''
+      experimental-features = nix-command flakes
+    '';
+    settings.auto-optimise-store = true;
+  };
+
+  # Enable CUPS to print documents.
+  services.printing.enable = true;
+
+  # Enable virtualisation
+  virtualisation.libvirtd.enable = true;
+  virtualisation.docker.enable = true;
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    chromium
-    curl
-    d2
-    docker
-    ffmpeg
-    git
-    glibc
-    htop
-    kdePackages.isoimagewriter
-    kdePackages.kate
-    libreoffice
-    libvirt
-    neovim
-    nmon
-    oh-my-zsh
-    openssl
-    php
-    plymouth
-    adi1090x-plymouth-themes
-    powerline-fonts
-    qemu_kvm
-    tcpdump
-    terminator
-    tmux
-    uutils-coreutils-noprefix
-    virt-manager
-    wget
-    zip
   ];
 
   programs = {
-    _1password.enable = true;
-    _1password-gui = {
-      enable = true;
-      # Certain features, including CLI integration and system authentication support,
-      # require enabling PolKit integration on some desktop environments (e.g. Plasma).
-      polkitPolicyOwners = [ "vinc" ];
-    };
-
-    direnv = {
-      enable = true;
-      loadInNixShell = true;
-      nix-direnv.enable = true;
-    };
-
-    firefox.enable = true;
+    chromium.enable = true;
 
     # plasma = {
     #   enable = true;

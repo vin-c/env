@@ -79,22 +79,6 @@
   # Configure console keymap
   console.keyMap = "fr";
 
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-
-  # Enable virtualisation
-  virtualisation.libvirtd.enable = true;
-  virtualisation.docker.enable = true;
-
-  nix = {
-    package = pkgs.nixVersions.latest;
-    extraOptions = ''
-      experimental-features = nix-command flakes
-    '';
-    settings.auto-optimise-store = true;
-  };
-  systemd.services.nix-daemon.serviceConfig.LimitNOFILE = lib.mkForce 1048576;
-
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave

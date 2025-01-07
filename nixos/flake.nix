@@ -1,0 +1,37 @@
+{
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    home-manager = {
+      url = "github:nix-community/home-manager/release-24.11";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    # lanzaboote = {
+    #   url = "github:nix-community/lanzaboote/v0.4.1";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
+  };
+  # outputs = { self, nixpkgs, unstable, lanzaboote, home-manager, nixos-hardware }:
+  outputs = { self, nixpkgs, unstable, home-manager, nixos-hardware }:
+  let
+    system = "x86_64-linux";
+  in {
+    nixosConfigurations.vinc-nixos = nixpkgs.lib.nixosSystem {
+      inherit system;
+      specialArgs = { unstablePkgs = unstable.legacyPackages.${system}; };
+      modules = [
+        # lanzaboote.nixosModules.lanzaboote
+        nixos-hardware.nixosModules.lenovo-thinkpad-t14-amd-gen3
+        ./configuration.nix
+        home-manager.nixosModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.vinc = import ./home.nix;
+          home-manager.extraSpecialArgs = { unfreePkgs = import unstable { config.allowUnfree = true; inherit system; }; };
+        }
+      ];
+    };
+  };
+}

@@ -16,35 +16,6 @@
       group = "vinc";
       extraGroups = [ "networkmanager" "wheel" "docker" ];
       shell = pkgs.zsh;
-      packages = with pkgs; [
-        dig
-        vlc
-        yubikey-manager-qt
-        (vscode-with-extensions.override {
-          vscode = vscodium;
-          vscodeExtensions = with vscode-extensions; [
-            bbenoist.nix
-            jnoortheen.nix-ide
-            ms-python.python
-            hookyqr.beautify
-            waderyan.gitblame
-            hashicorp.terraform
-            redhat.vscode-yaml
-            bierner.emojisense
-            redhat.ansible
-            mhutchie.git-graph
-            RoweWilsonFrederiskHolme.wikitext
-          ];
-          # ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-          #   {
-          #     name = "Ansible";
-          #     publisher = "redhat";
-          #     version = "24.8.3";
-          #     sha256 = "8DlOB3bog/VeW5YAU2DQhlkvCf+3JqVJNbPJJJWYjI4=";
-          #   }
-          # ];
-        })
-      ];
     };
   };
 }
