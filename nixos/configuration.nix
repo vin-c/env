@@ -8,9 +8,9 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./user.nix
+      ./kernel-configuration.nix
       ./programs.nix
-      <home-manager/nixos>
+      ./user.nix
     ];
 
   # Bootloader
